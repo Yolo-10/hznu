@@ -1,0 +1,117 @@
+@media screen and (min-width: 1000px) {
+  .g-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    width: 100%;
+    height: 100vh;
+    padding-top: 200px;
+    font-family: "microsoft yahei";
+
+    .m-login {
+      background-color: #333;
+      width: 500px;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+
+      .m-logo{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+
+        img{
+            width: 56px;
+        }
+
+        .m-title{
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            span{
+                font-size: 24px;
+                color: #fff;
+                letter-spacing: 2px;
+            }
+        }
+      }
+
+      .m-form {
+        display: flex;
+        align-items: flex-end;
+        flex: 1;
+        background: #eee;
+        padding: 20px 30px;
+        border: 1px solid #ddd;
+
+        form {
+          width: 100%;
+        }
+
+        input {
+          padding-left:40px;
+        }
+
+        button {
+          height: 40px;
+          font-size: 16px;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width:1000px){
+    .g-login{
+        display: flex;
+        flex-direction: column;
+        color: #eee;
+        font-size: 12px;
+        background-color: #fff;
+        min-height: 100vh;
+
+        .m-login{
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+
+            .m-logo{
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+
+                .m-title{
+                    position: absolute;
+                    top: 10px;
+                    left: 20px;
+
+                    span{
+                        font-size: 20px;
+                        color: #666;
+                    }
+                }
+            }
+
+            .m-form{
+                padding: 20px 30px;
+                display: flex;
+                align-items: flex-end;
+
+                form{
+                    width: 100%;
+
+                    .m-user-input{
+                        ImeMode:auto;
+                    }
+                }
+            }
+        }
+    }
+}
