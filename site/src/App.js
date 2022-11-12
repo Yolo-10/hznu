@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {HashRouter as Routes,Route,Switch} from 'react-router-dom'
+import { inject, observer } from 'mobx-react'
 import Loadable from './components/Loadable'
 import NavWrapper from './components/NavWrapper'
 

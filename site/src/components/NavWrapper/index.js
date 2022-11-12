@@ -5,7 +5,7 @@ import logo from '@/img/logo.svg'
 
 var MENU_MAIN =[
     // TODO:二级路由没有起作用
-    {name:'教务系统',key:'/login',role:0,list:[{name:'二级目录',key:'/tech',role:0,list:[]}]},
+    {name:'教务统计',key:'/login',role:0,list:[{name:'二级目录',key:'/tech',role:0,list:[]}]},
     {name:'帮助',key:'/help',role:0,list:[]}
 ]
 
