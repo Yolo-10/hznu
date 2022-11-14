@@ -1,5 +1,5 @@
-import {param} from '../../util/param'
-import request from '../../util/request'
+import {param} from '@util/param'
+import request from '@util/request'
 import { toJS } from 'mobx'
 
 //TODO:toJS了解

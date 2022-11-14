@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import {Spin ,Form,Button,Input,Icon} from 'antd'
 import { inject, observer } from 'mobx-react'
 
-import {msg} from '../../util/fn'
-import { saveUser } from '../../util/token'
-import * as urls from '../../constant/urls'
+import {msg} from '@util/fn'
+import { saveUser } from '@util/token'
+import * as urls from '@constant/urls'
 
 import './index.less'
 import logo from '@/img/logo_w.svg'

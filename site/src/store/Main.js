@@ -1,6 +1,6 @@
 import {observable,action} from 'mobx'
-import {removeUser,saveUser} from '../util/token'
-import BaseActions from '../components/BaseActions'
+import {removeUser,saveUser} from '@util/token'
+import BaseActions from '@components/BaseActions'
 
 class Main extends BaseActions {
     @observable
