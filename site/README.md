@@ -21,3 +21,13 @@ React 16.11.0
 3. `inactive`  : 指定所有不使用IME输入的字符。即激活非本地语言。用户仍可以撤销激活IME
 4. `disabled`  : 完全禁用IME。对于有焦点的控件(如输入框)，用户不可以激活IME
 
+- Mobx中的`toJS`
+将对象转换成JS
+
+- onKeyUp事件
+键盘按键被释放的事件
+```js
+onKeyUp = (e) =>{
+    console.log(e.keyCode);
+}
+```

@@ -76,6 +76,7 @@ export const msg=(info)=>{
     message:'提示',
     description: info,
     placement: 'topLeft',
+    duration:2,
     style: {
       width: 300,
       color:'#ff0000',

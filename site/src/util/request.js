@@ -2,7 +2,7 @@ import axios from 'axios'
 import {message} from 'antd'
 import jwt from './token'
 
-//请求头带Token
+//axios拦截器
 export default(url,option = {},allRes = false) => {
     let token = jwt.getToken()
 
@@ -15,6 +15,8 @@ export default(url,option = {},allRes = false) => {
         ...option
     }).then(r => {
         if(allRes){
+            // TODO:????????
+            // console.log('allRES',allRes);
             return r.data
         }
 

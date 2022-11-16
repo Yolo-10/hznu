@@ -2,7 +2,7 @@ import {param} from '@util/param'
 import request from '@util/request'
 import { toJS } from 'mobx'
 
-//TODO:toJS了解
+
 //封装get请求、post请求
 //request中将token放入请求头中
 export default class BaseAction{
@@ -12,12 +12,14 @@ export default class BaseAction{
 
     get = async (api = '', params = {}, allRes) =>{
       let url;
-      if (api.indexOf('?') === -1) { //api中上没有携带参数
+      if (api.indexOf('?') === -1) { //api本不携带参数
           url = api + `?${param(params)}`
       } else { 
           url = api + `&${param(params)}`
       }
       let data = await request(url, {}, allRes)
+      // console.log('data',data);
+      // console.log('toJS',toJS(data))
       return toJS(data)
     }
 

@@ -1,35 +1,32 @@
 import {observable,action} from 'mobx'
-import {removeUser,saveUser} from '@util/token'
+import {removeToken,saveToken} from '@util/token'
 import BaseActions from '@components/BaseActions'
 
+//store以及localStorage存入用户信息
 class Main extends BaseActions {
     @observable
     currentUser = undefined
 
     @action
     async post(url,params){
-        /**
-         * url 接口地址
-         * params uid+pwd
-         */
         return await this.post(url,params)
     }
 
     @action
     saveUser(u) {
         this.currentUser = u;
-        saveUser(u)
+        saveToken(u)
     }
 
     @action
-    loadUser(){
+    getUser(){
         return this.currentUser
     }
 
     @action
     logout(){
         this.currentUser = undefined
-        removeUser();
+        removeToken();
     }
 }
 

@@ -3,7 +3,6 @@ import {Spin ,Form,Button,Input,Icon} from 'antd'
 import { inject, observer } from 'mobx-react'
 
 import {msg} from '@util/fn'
-import { saveUser } from '@util/token'
 import * as urls from '@constant/urls'
 
 import './index.less'
@@ -16,35 +15,45 @@ class Login extends Component {
   constructor(props){
     super(props);
     this.store = this.props.mainStore
-  }
-
-  doLogin = async (u) =>{
-    let r = await this.store.post(urls.API_LOGIN, u)
-    console.log('res',r)
-
-    if(r.code === 200){
-      //mobx中存储用户身份
-      this.store.saveUser(r.data);
-      //localStorage中存储token
-      saveUser(r.data);
-      this.props.history.push("/");
-    }else{
-      msg('用户密码错误')
+    this.state = {
+      loading:false,
     }
   }
 
-  doCheckValid = ()=>{
-    this.props.form.validateFields(async (err,values) =>{
-      if(err){return}
+  doLogin = async(u) =>{
+    this.setState({loading:true})
+    let r = await this.store.post(urls.API_LOGIN,u);
+    if(r.code === 200){
+      this.store.saveUser(r.data)
+      this.setState({loading:false})
+      this.props.history.push('/');
+    }else{
+      msg('用户密码错误')
+      this.setState({loading:false})
+    }
+  }
+
+  doCheckValid = () =>{
+    //async生成的结果是promise
+    this.props.form.validateFields(async(err,values)=>{
+      if(err) {return}
+      //await... 表示整个程序会等到doLogin的promise成功resolve后继续执行
       await this.doLogin(values)
     })
+  }
+
+  onKeyUp =(e) =>{
+    if(e.keyCode == 13) {
+      this.doCheckValid();
+    }
   }
 
   render() {
     const {getFieldDecorator} = this.props.form
 
     return (
-        <div className='g-login'>
+      <Spin spinning={this.state.loading}>
+         <div className='g-login' onKeyUp={this.onKeyUp}>
           <div className='m-login'>
               <div className='m-logo'>
                 <img src={logo}/>
@@ -53,7 +62,7 @@ class Login extends Component {
                 </div>
               </div>
               <div className='m-form'>
-                <Form >
+                <Form>
                   <Form.Item>
                     {getFieldDecorator('uid', {
                       rules: [{required: true, message: ' 请输入账号!'}],
@@ -84,9 +93,9 @@ class Login extends Component {
                   </Form.Item>
                 </Form>
               </div>
-
           </div>
         </div>
+      </Spin>
     )
   }
 }
