@@ -1,14 +1,29 @@
 import React, { Component } from 'react'
 import {HashRouter as Routes,Route,Switch} from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
-import Loadable from './components/Loadable'
-import NavWrapper from './components/NavWrapper'
+import Loadable from '@components/Loadable'
+import NavWrapper from '@components/NavWrapper'
+import {getAllToken} from '@util/token'
+import {isN} from '@util/fn'
 
 import './less/global.less'
 import './less/var.less';
 
-//TODO:路由管理
+@inject('mainStore')
+@observer
 class App extends Component {
+  constructor(props){
+    super(props)
+    this.store = this.props.mainStore
+  }
+
+  componentDidMount(){
+    let user = getAllToken();
+    if(!isN(user)){
+      this.store.saveUser(user);
+    }
+  }
+
   render() {
     return (
       <Routes>

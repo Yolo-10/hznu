@@ -1,11 +1,29 @@
 import React, { Component } from 'react'
 import {Tooltip,Switch,Input,Form,Drawer} from "antd"
+import {inject, observer} from 'mobx-react'
+import {isN} from '@util/fn'
 import "./index.less"
 
 const { TextArea } = Input
 const menuList = ['全部','基本信息','教学进度','实验进度']
 
+@inject('mainStore')
+@observer
 export default class Tech extends Component {
+  constructor(props){
+    super(props)
+    this.store = this.props.mainStore
+  }
+
+  componentDidMount(){
+    if(isN(this.store.currentUser)){
+      this.props.history.push('login')
+    }else{
+      //已经登录有token，获取本来的数据
+    }
+  }
+
+
   render() {
     return (
       <div className='g-sys'>
