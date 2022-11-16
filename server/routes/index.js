@@ -21,6 +21,32 @@ router.post('/login',async(req,res,next) =>{
     }
 })
 
+router.post('/qryCls',async(req,res,next)=>{
+    let uid = decodeUser(req).uid;
+    let params = {uid:uid};
+    let sql = `CALL PROC_QRY_CLS(?)`
+    let r = await callP(sql,params,res);
+    res.status(200).json({code:200,data:r})
+})
+
+router.post('/qryClsMain',async(req,res,next)=>{
+    let uid = decodeUser(req).uid;
+    let params = {uid:uid,code:req.body.code};
+
+    let sql1 = `CALL PROC_QRY_CLS_MAIN(?)`
+    let sql2 = `CALL PROC_QRY_EXP(?)`
+    let sql3 = `CALL PROC_QRY_TECH(?)`
+    let r = await callP(sql1,params,res)
+    let e = await callP(sql2,params,res)
+    let t = await callP(sql3,params,res)
+    res.status(200).json({code:200,data:r,expList:e,tecList:t});
+})
+
+
+const decodeUser = (req) =>{
+    let token=req.headers.authorization
+    return JSON.parse(token.split(' ')[1])
+}
 
 var callSQLProc = (sql,params,res)=>{
     return new Promise(resolve =>{

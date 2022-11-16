@@ -41,3 +41,5 @@ console.log(user);
 console.log(token);
 //{id: 1, uid: '20030013', pwd: '20030013', role: '1|1|1|1'}
 ```
+
+### bind?
