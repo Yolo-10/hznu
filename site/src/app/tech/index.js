@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import {Tooltip,Switch,Input,Form,Spin} from "antd"
+import {Tooltip,Switch,Input,Form,Spin,Select} from "antd"
 import {inject, observer} from 'mobx-react'
 import {isN} from '@util/fn'
 import * as urls from '@constant/urls'
 import "./index.less"
 
 const { TextArea } = Input
+const { Option } = Select
 const menuList = ['全部','基本信息','教学进度','实验进度']
 
 @inject('mainStore')
@@ -30,6 +31,9 @@ export default class Tech extends Component {
       this.setState({loading:true})
       let r = await this.store.post(urls.API_QRY_CLS,null);
       this.setState({clsList:r.data,loading:false});
+      
+      // 默认第一个课程
+      this.doSelCls(this.state.clsList[0].code);
     }
   }
 
@@ -38,13 +42,12 @@ export default class Tech extends Component {
     let params =  {code:code}
     this.setState({loading:true})
     let r = await this.store.post(urls.API_QRY_CLS_MAIN,params);
-    console.log('rrr',r);
     this.setState({loading:false, clsDetail:r.data, tecList:r.tecList, expList:r.expList})
   }
 
 
   render() {
-    let {loading,clsList,clsDetail} = this.state;
+    let {loading,clsList,clsDetail,tecList,expList} = this.state;
     let cls = clsDetail[0]
 
     if(!isN(cls)){
@@ -218,16 +221,16 @@ export default class Tech extends Component {
                 <div className='m-main'>
                   <div className='m-tab'>
                     <label>课程描述及与其他课程关系<em>(不超过200字)</em></label>
-                    <TextArea maxLength={200}/>
+                    <TextArea maxLength={200} value={cls?.desc}/>
 
                     <label>使用教材与参考书目<em>(不超过200字)</em></label>
-                    <TextArea maxLength={200}/>
+                    <TextArea maxLength={200} value={cls?.mate}/>
 
                     <label>课程考核<em>(不超过200字)</em></label>
-                    <TextArea maxLength={200}/>
+                    <TextArea maxLength={200} value={cls?.exam}/>
 
                     <label>教学方法与手段及相关要求<em>(不超过200字)</em></label>
-                    <TextArea maxLength={200}/>
+                    <TextArea maxLength={200} value={cls?.method}/>
                   </div>
                 </div>
 
@@ -240,7 +243,17 @@ export default class Tech extends Component {
                       <span>教学形式与内容资料</span>
                       <span>作业与辅导安排</span>
                     </div>
-                    <div className="m-none">暂无数据</div>
+
+                    {tecList.length==0 && <div className="m-none">暂无数据</div>}
+                    
+                    {tecList.map((item,i)=>
+                      <div className='m-row-t' key={i}>
+                        <span>{i+1}</span>
+                        <Input value={item.cnt}/>
+                        <Input value={item.method}/>
+                        <Input value={item.task}/>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -255,7 +268,41 @@ export default class Tech extends Component {
                       <span>实验教室</span>
                       <span>每组人数</span>
                     </div>
-                    <div className='m-none'>暂无数据</div>
+                    {expList.length==0 && <div className='m-none'>暂无数据</div>}
+
+                    {expList.map((item,i)=>(
+                      <div className='m-row-e' key={item.id}>
+                        <span>{i+1}</span>
+                        <Input value={item.name}/>
+                        <Select value={item.type} style={{width:'80px',marginLeft:'10px'}} size="small">
+                          <Option value={'验证'}>验证</Option>
+                          <Option value={'设计'}>设计</Option>
+                          <Option value={'研究'}>研究</Option>
+                          <Option value={'综合'}>综合</Option>
+                          <Option value={'演示'}>演示</Option>
+                        </Select>
+                        <Select value={item.prop} style={{width:'80px',marginLeft:'10px'}} size="small">
+                          <Option value={'必做'}>必做</Option>
+                          <Option value={'选做'}>选做</Option>
+                        </Select>
+                        <Input value={item.addr}/>
+                        <Input value={item.gnum}/>
+                            {/* <Input value={item.name} />
+                        <Select value={item.type} style={{'width':'80px','margin':'0 5px'}} size='small' > 
+                          <Option value="验证">验证</Option>
+                          <Option value="设计">设计</Option>
+                          <Option value="研究">研究</Option>
+                          <Option value="综合">综合</Option>
+                          <Option value="演示">演示</Option>
+                        </Select>
+                        <Select value={item.prop} style={{'width':'80px','margin':'0 5px'}} size='small'> 
+                          <Option value="验证">必做</Option>
+                          <Option value="设计">选做</Option>
+                        </Select>
+                        <Input value={item.addr} />
+                        <Input value={item.gnum} /> */}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </Form>

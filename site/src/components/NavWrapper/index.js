@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import './index.less'
 import logo from '@/img/logo.svg'
+import {inject, observer} from 'mobx-react'
 
 var MENU_MAIN =[
     // TODO:二级路由没有起作用
@@ -9,9 +10,12 @@ var MENU_MAIN =[
     {name:'帮助',key:'/help',role:0,list:[]}
 ]
 
+@inject('mainStore')
+@observer
 export default class NavWrapper extends Component {
     constructor(props){
         super(props);
+        this.store = this.props.mainStore
         this.state = {
             menu:[],
         }
@@ -24,6 +28,10 @@ export default class NavWrapper extends Component {
             menu.push(item);
         })
         this.setState({menu:menu})
+    }
+
+    logout = ()=>{
+        console.log('退出登录')
     }
 
     render() {
@@ -50,7 +58,7 @@ export default class NavWrapper extends Component {
                         </div>
                     )}
                     
-                    <div className="m-item">
+                    <div className="m-item" onClick={this.logout}>
                         <span>退出登录</span>
                     </div>
                 </div>
