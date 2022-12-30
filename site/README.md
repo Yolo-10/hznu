@@ -44,7 +44,10 @@ console.log(token);
 //{id: 1, uid: '20030013', pwd: '20030013', role: '1|1|1|1'}
 ```
 
-### bind?
+### bind
+- 创建一个新函数
+- 新函数被调用的时候，新函数中的`this`被指定为`bind()`的第一个参数，其余参数作为新函数的参数，供调用时使用
+- 改变`this`指向
 
 ### `JSON.parse`与`JSON.stringify`
 字符串对象(就是一个字符串)：`'{"id":23,"uid":"20050027","pwd":"20050027","role":"1|1|1|1"}'`
@@ -70,4 +73,15 @@ JS对象(就是一个对象):`{id: 23, uid: '20050027', pwd: '20050027', role: '
 ```jsx
 import {withRouter} from 'react-router-dom' 
 export default withRouter(组件名); 
+```
+
+### 输出数组的一个位置的元素并返回
+- `splice()` 方法用于添加或删除数组中的元素。
+- 会改变原数组
+
+```js
+var fruits = ["Banana", "Orange", "Apple", "Mango"];
+//从下标为2位置的开始删除一个元素
+fruits.splice(2,1); // ['Apple']
+fruits  //['Banana', 'Orange', 'Mango']
 ```

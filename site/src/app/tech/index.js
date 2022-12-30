@@ -17,6 +17,7 @@ export default class Tech extends Component {
     this.store = this.props.mainStore
     this.state = {
       loading:false,
+      selMenu:0,
       clsList:[],
       clsDetail:[],
       tecList:[],
@@ -45,9 +46,31 @@ export default class Tech extends Component {
     this.setState({loading:false, clsDetail:r.data, tecList:r.tecList, expList:r.expList})
   }
 
+  doSelMenu = (i) =>{
+    this.setState({selMenu:i})
+  }
+
+  doSelWeb = ()=>{
+    let {clsDetail} = this.state;
+    clsDetail[0].web = (!clsDetail[0].web)? 1:0;
+    this.setState({clsDetail:clsDetail});
+  }
+
+  doDelTechItem = (i)=>{
+    let {tecList} = this.state;
+    tecList.splice(i,1);
+    this.setState({tecList:tecList})
+  }
+
+  doDelExpItem = (i)=>{
+    let {expList} = this.state;
+    expList.splice(i,1);
+    this.setState({expList:expList})
+  }
+
 
   render() {
-    let {loading,clsList,clsDetail,tecList,expList} = this.state;
+    let {loading,clsList,clsDetail,tecList,expList,selMenu} = this.state;
     let cls = clsDetail[0]
 
     if(!isN(cls)){
@@ -118,123 +141,127 @@ export default class Tech extends Component {
                   <div className='m-info'>
                     <span>{cls?.cform}</span>
                     <span>{cls?.cprop}</span>
-                    <Switch checkedChildren="网" unCheckedChildren="普"></Switch>
+                    <Switch checkedChildren="网" unCheckedChildren="普" onClick={this.doSelWeb}></Switch>
                   </div>
                   <div className='m-menu'>
                     {menuList.map((item,i)=>
-                      <div key={i} className="m-item">{item}</div>
+                      <div key={i} className="m-item" onClick={this.doSelMenu.bind(this,i)}>{item}</div>
                     )}
                   </div>
                 </div>
-                <div className='m-main'>
-                  <div className='m-tl'>基本信息</div>
-                  <div className='m-sect'>
-                    <div className='m-item'>
-                      <label>授课校区</label>
-                      <span>{cls?.pos}</span>
-                    </div>
-                    <div className='m-item'>
-                      <label>开课学院</label>
-                      <span>{cls?.col}</span>
-                    </div>
-                    <div className='m-item'>
-                      <label>课程学分</label>
-                      <span>{cls?.mark}</span>
-                    </div>
-                    <div className='m-item'>
-                      <label>教学周期</label>
-                      <span>{cls?.week}</span>
-                    </div>
-                  </div>
 
-                  <div className='m-sect'>
-                    <div className='m-item'>
-                      <label>理论课时</label>
-                      <span>{cls?.t_hour}</span>
+                <>
+                  <div className={(selMenu==0 || selMenu==1)? "m-main":"m-main fn-hide"}>
+                    <div className='m-tl'>基本信息</div>
+                    <div className='m-sect'>
+                      <div className='m-item'>
+                        <label>授课校区</label>
+                        <span>{cls?.pos}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>开课学院</label>
+                        <span>{cls?.col}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>课程学分</label>
+                        <span>{cls?.mark}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>教学周期</label>
+                        <span>{cls?.week}</span>
+                      </div>
                     </div>
-                    <div className='m-item'>
-                      <label>实验课时</label>
-                      <span>{cls?.e_hour}</span>
-                    </div>
-                    <div className='m-item'>
-                      <label>周学时数</label>
-                      <span>{cls?.w_hour}</span>
-                    </div>
-                    <div className='m-item'>
-                      <label>总课时数</label>
-                      <span>{cls?.a_hour}</span>
-                    </div>
-                  </div>
 
-                  <div className='m-sect'>
-                    <div className='m-item'>
-                      <label>主讲教师</label>
-                      <span>{cls?.m_tech}</span>
+                    <div className='m-sect'>
+                      <div className='m-item'>
+                        <label>理论课时</label>
+                        <span>{cls?.t_hour}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>实验课时</label>
+                        <span>{cls?.e_hour}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>周学时数</label>
+                        <span>{cls?.w_hour}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>总课时数</label>
+                        <span>{cls?.a_hour}</span>
+                      </div>
                     </div>
-                    <div className='m-item'>
-                      <label>辅导教师</label>
-                      <span>{cls?.s_tech}</span>
-                    </div>
-                    <div className='m-item'>
-                      <label>答疑时间</label>
-                      <span>{cls?.q_time}</span>
-                    </div>
-                    <div className='m-item'>
-                      <label>答疑地点</label>
-                      <span>{cls?.q_addr}</span>
-                    </div>
-                  </div>
 
-                  <div className='m-sect'>
-                    <div className='m-item'>
-                      <label>教学网站</label>
-                      <span>{cls?.url}</span>
+                    <div className='m-sect'>
+                      <div className='m-item'>
+                        <label>主讲教师</label>
+                        <span>{cls?.m_tech}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>辅导教师</label>
+                        <span>{cls?.s_tech}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>答疑时间</label>
+                        <span>{cls?.q_time}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>答疑地点</label>
+                        <span>{cls?.q_addr}</span>
+                      </div>
                     </div>
-                    <div className='m-item'>
-                      <label>点击次数</label>
-                      <span>{cls?.click}</span>
-                    </div>
-                    <div className='m-item'>
-                      <label>账号名称</label>
-                      <span>{cls?.uid}</span>
-                    </div>
-                    <div className='m-item'>
-                      <label>登录密码</label>
-                      <span>{cls?.pwd}</span>
-                    </div>
+
+                    {(cls?.web==1) && <div className='m-sect'>
+                      <div className='m-item'>
+                        <label>教学网站</label>
+                        <span>{cls?.url}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>点击次数</label>
+                        <span>{cls?.click}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>账号名称</label>
+                        <span>{cls?.uid}</span>
+                      </div>
+                      <div className='m-item'>
+                        <label>登录密码</label>
+                        <span>{cls?.pwd}</span>
+                      </div>
+                    </div>}
+                    
                   </div>
-                </div>
-                <div className='m-main'>
+                  <div className={(selMenu==0 || selMenu==1)? "m-main":"m-main fn-hide"}>
+                      <div className='m-tab'>
+                        {clsDetail.map((item,i)=>
+                          <div className='m-row' key={item.id}>
+                            <span>{i+1}</span>
+                            <span>{item.name}</span>
+                            <span>{item.cls}</span>
+                            <span>{item.st_num}</span>
+                            <span>{item.wt}</span>
+                            <span>{item.addr}</span>
+                          </div> 
+                        )}
+                      </div>
+                  </div>
+                  <div className={(selMenu==0 || selMenu==1)? "m-main":"m-main fn-hide"}>
                     <div className='m-tab'>
-                      {clsDetail.map((item,i)=>
-                        <div className='m-row' key={item.id}>
-                          <span>{i+1}</span>
-                          <span>{item.name}</span>
-                          <span>{item.cls}</span>
-                          <span>{item.st_num}</span>
-                          <span>{item.wt}</span>
-                          <span>{item.addr}</span>
-                        </div> 
-                      )}
+                      <label>课程描述及与其他课程关系<em>(不超过200字)</em></label>
+                      <TextArea maxLength={200} value={cls?.desc}/>
+
+                      <label>使用教材与参考书目<em>(不超过200字)</em></label>
+                      <TextArea maxLength={200} value={cls?.mate}/>
+
+                      <label>课程考核<em>(不超过200字)</em></label>
+                      <TextArea maxLength={200} value={cls?.exam}/>
+
+                      <label>教学方法与手段及相关要求<em>(不超过200字)</em></label>
+                      <TextArea maxLength={200} value={cls?.method}/>
                     </div>
-                </div>
-                <div className='m-main'>
-                  <div className='m-tab'>
-                    <label>课程描述及与其他课程关系<em>(不超过200字)</em></label>
-                    <TextArea maxLength={200} value={cls?.desc}/>
-
-                    <label>使用教材与参考书目<em>(不超过200字)</em></label>
-                    <TextArea maxLength={200} value={cls?.mate}/>
-
-                    <label>课程考核<em>(不超过200字)</em></label>
-                    <TextArea maxLength={200} value={cls?.exam}/>
-
-                    <label>教学方法与手段及相关要求<em>(不超过200字)</em></label>
-                    <TextArea maxLength={200} value={cls?.method}/>
                   </div>
-                </div>
+                </>
 
-                <div className='m-main' style={{'margin': '35px 0 0'}}>
+                <div className={(selMenu==0 || selMenu==2)? "m-main":"m-main fn-hide"} style={{'margin': '35px 0 0'}}>
                   <div className='m-tl'>教学进度</div>
                   <div className='m-tech'>
                     <div className='m-row-t'>
@@ -248,7 +275,7 @@ export default class Tech extends Component {
                     
                     {tecList.map((item,i)=>
                       <div className='m-row-t' key={i}>
-                        <span>{i+1}</span>
+                        <span onClick={()=>this.doDelTechItem(i)}>{i+1}</span>
                         <Input value={item.cnt}/>
                         <Input value={item.method}/>
                         <Input value={item.task}/>
@@ -257,7 +284,7 @@ export default class Tech extends Component {
                   </div>
                 </div>
 
-                <div className='m-main' style={{'margin': '35px 0 0'}}>
+                <div className={(selMenu==0 || selMenu==3)? "m-main":"m-main fn-hide"} style={{'margin': '35px 0 0'}}>
                   <div className='m-tl'>实验进度</div>
                   <div className='m-tech'>
                     <div className='m-row-e'>
@@ -272,7 +299,7 @@ export default class Tech extends Component {
 
                     {expList.map((item,i)=>(
                       <div className='m-row-e' key={item.id}>
-                        <span>{i+1}</span>
+                        <span onClick={()=>this.doDelExpItem(i)}>{i+1}</span>
                         <Input value={item.name}/>
                         <Select value={item.type} style={{width:'80px',marginLeft:'10px'}} size="small">
                           <Option value={'验证'}>验证</Option>
