@@ -11,6 +11,8 @@ React 16.11.0
 
 ## 遇到的问题
 - `login.js`中`this.props.form`,`props`中有`form`是因为有`Form.create()(Login)`
+- `Main.js`需要`new Main()`
+- `NavWrapper`组件上没有`history`对象，使用`withRouter`
 
 
 ## 学习
@@ -43,3 +45,29 @@ console.log(token);
 ```
 
 ### bind?
+
+### `JSON.parse`与`JSON.stringify`
+字符串对象(就是一个字符串)：`'{"id":23,"uid":"20050027","pwd":"20050027","role":"1|1|1|1"}'`
+JS对象(就是一个对象):`{id: 23, uid: '20050027', pwd: '20050027', role: '1|1|1|1'}`
+将字符串转为对象:`JSON.parse`
+将数据转为字符串：`JSON.stringify`
+
+
+### 动态加载权限菜单
+获取用户权限数据，遍历权限菜单，对应的权限数据允许，则加入加载菜单名单
+
+### `withRouter`
+
+#### 作用
+在不是通过路由切换的组件中使用，能将`react-router` 的 `history`、`location`、`match` 三个对象传入`props`对象上
+
+#### 解释
+默认情况下必须是经过路由匹配渲染的组件才存在this.props，才拥有路由参数，才能使用编程式导航的写法，执行this.props.history.push('/detail')跳转到对应路由的页面。
+
+然而不是所有组件都直接与路由相连（通过路由跳转到此组件）的，当这些组件需要路由参数时，使用withRouter就可以给此组件传入路由参数，此时就可以使用this.props
+
+#### 使用方法
+```jsx
+import {withRouter} from 'react-router-dom' 
+export default withRouter(组件名); 
+```

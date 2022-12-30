@@ -287,20 +287,6 @@ export default class Tech extends Component {
                         </Select>
                         <Input value={item.addr}/>
                         <Input value={item.gnum}/>
-                            {/* <Input value={item.name} />
-                        <Select value={item.type} style={{'width':'80px','margin':'0 5px'}} size='small' > 
-                          <Option value="验证">验证</Option>
-                          <Option value="设计">设计</Option>
-                          <Option value="研究">研究</Option>
-                          <Option value="综合">综合</Option>
-                          <Option value="演示">演示</Option>
-                        </Select>
-                        <Select value={item.prop} style={{'width':'80px','margin':'0 5px'}} size='small'> 
-                          <Option value="验证">必做</Option>
-                          <Option value="设计">选做</Option>
-                        </Select>
-                        <Input value={item.addr} />
-                        <Input value={item.gnum} /> */}
                       </div>
                     ))}
                   </div>

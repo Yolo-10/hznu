@@ -1,41 +1,60 @@
 import React, { Component } from 'react'
+import {withRouter} from 'react-router-dom'
 
 import './index.less'
 import logo from '@/img/logo.svg'
 import {inject, observer} from 'mobx-react'
+import {isN} from '@/util/fn.js'
+import {getAllToken} from  '@/util/token.js'
 
 var MENU_MAIN =[
     // TODO:二级路由没有起作用
-    {name:'教务统计',key:'/login',role:0,list:[{name:'二级目录',key:'/tech',role:0,list:[]}]},
+    {name:'教务统计',key:'/',role:0,list:[{name:'二级目录',key:'/tech',role:0,list:[]}]},
     {name:'帮助',key:'/help',role:0,list:[]}
 ]
 
 @inject('mainStore')
 @observer
-export default class NavWrapper extends Component {
+class NavWrapper extends Component {
     constructor(props){
         super(props);
         this.store = this.props.mainStore
         this.state = {
             menu:[],
+            selM:0,
         }
     }
 
+    //动态加载菜单
     componentDidMount(){
-        let {menu} = this.state;
-        MENU_MAIN.map((item,i)=>{
-            //TODO
-            menu.push(item);
-        })
-        this.setState({menu:menu})
+        //从本地存储获取token
+        let user = getAllToken();
+        if(!isN(user)){
+            //解析角色权限
+            let role = user.role.split('|');
+            let {menu} = this.state;
+            MENU_MAIN.map((item,i)=>{
+                //一个权限位置对应一个菜单
+                if(parseInt(role[i])) menu.push(item)
+            })
+            this.setState({menu:menu})
+        }
+    }
+
+    doMenu = (item,i)=>{
+        if (isN(item.key)) return
+        this.setState({selM:i})
+        this.props.history.push(item.key)
     }
 
     logout = ()=>{
-        console.log('退出登录')
+        this.store.logout();
+        this.props.history.push('/login')
     }
 
     render() {
-        const {menu} = this.state;
+        const {menu,selM} = this.state;
+        const {currentUser} = this.store;
         
         return (
         <div className='g-nav'>
@@ -48,19 +67,21 @@ export default class NavWrapper extends Component {
 
                 <div className='m-menu_wrap'>
                     {menu.map((item,i)=>
-                        <div key={i} className="m-item">
+                        <div key={i} className={i==selM? "m-item active":"m-item"}
+                            onClick={this.doMenu.bind(this,item,i)}>
                             {item.name}
                             <div className='m-sub_menu'>
                                 {item.list.map((o,j)=>
-                                    <div className='m-sub' key={j}>{o.name}</div>
+                                    <div className='m-sub' key={j} 
+                                    onClick={this.doMenu.bind(this,o,j)}>{o.name}</div>
                                 )}
                             </div>
                         </div>
                     )}
                     
-                    <div className="m-item" onClick={this.logout}>
+                    {!(isN(currentUser)) && <div className="m-item" onClick={this.logout}>
                         <span>退出登录</span>
-                    </div>
+                    </div>} 
                 </div>
             </div>
             
@@ -79,3 +100,5 @@ export default class NavWrapper extends Component {
         )
   }
 }
+
+export default withRouter(NavWrapper)
