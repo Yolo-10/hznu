@@ -28,7 +28,6 @@ router.post('/qryCls',async(req,res,next)=>{
     let r = await callP(sql,params,res);
     res.status(200).json({code:200,data:r})
 })
-
 router.post('/qryClsMain',async(req,res,next)=>{
     let uid = decodeUser(req).uid;
     let params = {uid:uid,code:req.body.code};
@@ -40,6 +39,20 @@ router.post('/qryClsMain',async(req,res,next)=>{
     let e = await callP(sql2,params,res)
     let t = await callP(sql3,params,res)
     res.status(200).json({code:200,data:r,expList:e,tecList:t});
+})
+
+router.post('/savCls',async(req,res,next)=>{
+    let uid = decodeUser(req).uid
+    req.body.uid = uid
+    let params = req.body
+
+    let sql1 = `CALL PROC_SAV_CLS(?)`
+    let sql2 = `CALL PROC_SAV_EXP(?)`
+    let sql3 = `CALL PROC_SAV_TECH(?)`
+    let r = await callP(sql1,params,res)
+    let e = await callP(sql2,params,res)
+    let t = await callP(sql3,params,res)
+    res.status(200).json({code: 200, data: r, tecList: t, expList: e})
 })
 
 

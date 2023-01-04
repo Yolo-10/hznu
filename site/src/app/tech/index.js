@@ -11,7 +11,7 @@ const menuList = ['全部','基本信息','教学进度','实验进度']
 
 @inject('mainStore')
 @observer
-export default class Tech extends Component {
+class Tech extends Component {
   constructor(props){
     super(props)
     this.store = this.props.mainStore
@@ -20,6 +20,7 @@ export default class Tech extends Component {
       selMenu:0,
       clsList:[],
       clsDetail:[],
+      code:[],
       tecList:[],
       expList:[]
     }
@@ -43,7 +44,7 @@ export default class Tech extends Component {
     let params =  {code:code}
     this.setState({loading:true})
     let r = await this.store.post(urls.API_QRY_CLS_MAIN,params);
-    this.setState({loading:false, clsDetail:r.data, tecList:r.tecList, expList:r.expList})
+    this.setState({loading:false, clsDetail:r.data, code:code, tecList:r.tecList, expList:r.expList})
   }
 
   doSelMenu = (i) =>{
@@ -68,8 +69,28 @@ export default class Tech extends Component {
     this.setState({expList:expList})
   }
 
+  doChgVal = (key,e)=>{
+    let val = e.currentTarget.value;
+    let {clsDetail} = this.state;
+    clsDetail[0][key] = val
+    this.setState({clsDetail:clsDetail})
+  }
+
+  doSave = async() =>{
+    this.props.form.validateFields(async(err,values)=>{
+      if(err) {return}
+
+      values.web = (values.web)? 1:0
+      const {expList,tecList,code} = this.state
+      let params = {code:code,expList:expList,tecList:tecList,...values}
+      this.setState({loading:true})
+      let r = await this.store.post(urls.API_SAV_CLS,params);
+      this.setState({loading:false,clsDetail:r.data,expList:r.expList,tecList:r.tecList})
+    })
+  }
 
   render() {
+    const {getFieldDecorator} = this.props.form;
     let {loading,clsList,clsDetail,tecList,expList,selMenu} = this.state;
     let cls = clsDetail[0]
 
@@ -93,7 +114,7 @@ export default class Tech extends Component {
               {(clsDetail.length>0) &&
               <>
                 <div className='m-fun'>
-                  <div className='m-item' style={{background:'#21A557',color:'#fff'}}>保存数据</div>
+                  <div className='m-item' style={{background:'#21A557',color:'#fff'}} onClick={this.doSave}>保存数据</div>
                 </div>
 
                 <div className='m-fun'>
@@ -141,7 +162,12 @@ export default class Tech extends Component {
                   <div className='m-info'>
                     <span>{cls?.cform}</span>
                     <span>{cls?.cprop}</span>
-                    <Switch checkedChildren="网" unCheckedChildren="普" onClick={this.doSelWeb}></Switch>
+                    <Form.Item>
+                      {getFieldDecorator('web',{
+                        valuePropName: 'checked',
+                        initialValue: cls?.web==1
+                      })(<Switch checkedChildren="网" unCheckedChildren="普" onClick={this.doSelWeb}></Switch>)}
+                    </Form.Item>
                   </div>
                   <div className='m-menu'>
                     {menuList.map((item,i)=>
@@ -175,11 +201,21 @@ export default class Tech extends Component {
                     <div className='m-sect'>
                       <div className='m-item'>
                         <label>理论课时</label>
-                        <span>{cls?.t_hour}</span>
+                        <Form.Item>
+                          {getFieldDecorator('t_hour',{
+                            rules:[{required:true,message:'请输入理论课时！'}],
+                            initialValue:cls?.t_hour
+                          })(<Input onChange={this.doChgVal.bind(this,'t_hour')}/>)}
+                        </Form.Item>
                       </div>
                       <div className='m-item'>
                         <label>实验课时</label>
-                        <span>{cls?.e_hour}</span>
+                        <Form.Item>
+                          {getFieldDecorator('e_hour',{
+                            rules:[{required:true,message:'请输入实验课时！'}],
+                            initialValue:cls?.e_hour
+                          })(<Input onChange={this.doChgVal.bind(this,'e_hour')}/>)}
+                        </Form.Item>
                       </div>
                       <div className='m-item'>
                         <label>周学时数</label>
@@ -194,38 +230,78 @@ export default class Tech extends Component {
                     <div className='m-sect'>
                       <div className='m-item'>
                         <label>主讲教师</label>
-                        <span>{cls?.m_tech}</span>
+                        <Form.Item>
+                          {getFieldDecorator('m_tech',{
+                            rules:[{required:true,message:'请输入主讲教师！'}],
+                            initialValue:cls?.m_tech
+                          })(<Input onChange={this.doChgVal.bind(this,'m_tech')}/>)}
+                        </Form.Item>
                       </div>
                       <div className='m-item'>
                         <label>辅导教师</label>
-                        <span>{cls?.s_tech}</span>
+                        <Form.Item>
+                          {getFieldDecorator('s_tech',{
+                            rules:[{required:true,message:'请输入辅导教师！'}],
+                            initialValue:cls?.s_tech
+                          })(<Input onChange={this.doChgVal.bind(this,'s_tech')}/>)}
+                        </Form.Item>
                       </div>
                       <div className='m-item'>
                         <label>答疑时间</label>
-                        <span>{cls?.q_time}</span>
+                        <Form.Item>
+                          {getFieldDecorator('q_time',{
+                            rules:[{required:true,message:'请输入答疑时间！'}],
+                            initialValue:cls?.q_time
+                          })(<Input onChange={this.doChgVal.bind(this,'q_time')}/>)}
+                        </Form.Item>
                       </div>
                       <div className='m-item'>
                         <label>答疑地点</label>
-                        <span>{cls?.q_addr}</span>
+                        <Form.Item>
+                          {getFieldDecorator('q_addr',{
+                            rules:[{required:true,message:'请输入答疑地点！'}],
+                            initialValue:cls?.q_addr
+                          })(<Input onChange={this.doChgVal.bind(this,'q_addr')}/>)}
+                        </Form.Item>
                       </div>
                     </div>
 
                     {(cls?.web==1) && <div className='m-sect'>
                       <div className='m-item'>
                         <label>教学网站</label>
-                        <span>{cls?.url}</span>
+                        <Form.Item>
+                          {getFieldDecorator('url',{
+                            rules:[{required:true,message:'请输入教学网站网址！'}],
+                            initialValue:cls?.url
+                          })(<Input onChange={this.doChgVal.bind(this,'url')}/>)}
+                        </Form.Item>
                       </div>
                       <div className='m-item'>
                         <label>点击次数</label>
-                        <span>{cls?.click}</span>
+                        <Form.Item>
+                          {getFieldDecorator('click',{
+                            rules:[{required:true,message:'请输入点击次数！'}],
+                            initialValue:cls?.click
+                          })(<Input onChange={this.doChgVal.bind(this,'click')}/>)}
+                        </Form.Item>
                       </div>
                       <div className='m-item'>
                         <label>账号名称</label>
-                        <span>{cls?.uid}</span>
+                        <Form.Item>
+                          {getFieldDecorator('uid',{
+                            rules:[{required:true,message:'请输入账号名称！'}],
+                            initialValue:cls?.uid
+                          })(<Input onChange={this.doChgVal.bind(this,'uid')}/>)}
+                        </Form.Item>
                       </div>
                       <div className='m-item'>
                         <label>登录密码</label>
-                        <span>{cls?.pwd}</span>
+                        <Form.Item>
+                          {getFieldDecorator('pwd',{
+                            rules:[{required:true,message:'请输入登录密码！'}],
+                            initialValue:cls?.pwd
+                          })(<Input onChange={this.doChgVal.bind(this,'pwd')}/>)}
+                        </Form.Item>
                       </div>
                     </div>}
                     
@@ -247,16 +323,32 @@ export default class Tech extends Component {
                   <div className={(selMenu==0 || selMenu==1)? "m-main":"m-main fn-hide"}>
                     <div className='m-tab'>
                       <label>课程描述及与其他课程关系<em>(不超过200字)</em></label>
-                      <TextArea maxLength={200} value={cls?.desc}/>
+                      <Form.Item>
+                        {getFieldDecorator('desc',{
+                          initialValue:cls?.desc
+                        })(<TextArea maxLength={200}/>)}
+                      </Form.Item>
 
                       <label>使用教材与参考书目<em>(不超过200字)</em></label>
-                      <TextArea maxLength={200} value={cls?.mate}/>
+                      <Form.Item>
+                        {getFieldDecorator('mate',{
+                          initialValue:cls?.mate
+                        })(<TextArea maxLength={200}/>)}
+                      </Form.Item>
 
                       <label>课程考核<em>(不超过200字)</em></label>
-                      <TextArea maxLength={200} value={cls?.exam}/>
+                      <Form.Item>
+                        {getFieldDecorator('exam',{
+                          initialValue:cls?.exam
+                        })(<TextArea maxLength={200}/>)}
+                      </Form.Item>
 
                       <label>教学方法与手段及相关要求<em>(不超过200字)</em></label>
-                      <TextArea maxLength={200} value={cls?.method}/>
+                      <Form.Item>
+                        {getFieldDecorator('method',{
+                          initialValue:cls?.method
+                        })(<TextArea maxLength={200}/>)}
+                      </Form.Item>
                     </div>
                   </div>
                 </>
@@ -324,7 +416,8 @@ export default class Tech extends Component {
           </div>
         </div>
       </Spin>
-      
     )
   }
 }
+
+export default Form.create()(Tech)

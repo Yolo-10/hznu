@@ -5,6 +5,14 @@
     height: calc(100% - 75px);
     min-height: calc(100vh - 75px);
 
+    .ant-form-item {
+      margin-bottom: 0 !important;
+    }
+  
+    .ant-form-item-control {
+      line-height: unset !important;
+    }
+
     .m-bd{
         display: flex;
         flex: 1 1;
@@ -230,6 +238,17 @@
                             flex:1 1;
                             text-align: center;
                         }
+
+                        input{
+                          border: none;
+                          border-bottom: 1px solid #ccc;
+                          border-radius: unset;
+                          height: unset;
+                          line-height: unset;
+                          text-align: center;
+                          padding: 0;
+                          margin-left: 10px;
+                        }
                    }
                 }
                 
@@ -288,6 +307,14 @@
                     
                         &.m-row{
                             margin-top: 1px;
+                        }
+
+                        &:hover {
+                          background: #E8EEF7;
+
+                          &>span{
+                            background: #E8EEF7;
+                          }
                         }
                     }
                 }
