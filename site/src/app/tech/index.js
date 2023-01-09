@@ -78,11 +78,18 @@ class Tech extends Component {
     this.setState({clsDetail:clsDetail})
   }
 
-  doChgT = (index,key,e)=>{
+  doChgT = (i,k,e)=>{
     let val = e.currentTarget.value;
     let {tecList} = this.state;
-    tecList[index][key] = val;
+    tecList[i][k] = val;
     this.setState({tecList:tecList})
+  }
+
+  doChgE = (i,k,e)=>{
+    let val = (k =="prop" || k =='type')? e:e.currentTarget.value;
+    let {expList} = this.state;
+    expList[i][k] = val;
+    this.setState({expList:expList})
   }
 
   doSave = async() =>{
@@ -119,6 +126,35 @@ class Tech extends Component {
           message.error('无剪贴数据')
         }else{
           that.setState({tecList:r})
+        }
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
+  doImportE = () =>{
+    let that = this
+    confirm({
+      title: '提示',
+      content: '你确认要将剪贴板的数据导入到实验进度吗？（原实验进度数据会被全部替换）',
+      async onOk() {
+        const r = [];
+        const text = await navigator.clipboard.readText();
+        const list = text.split('\r\n');
+        list.map((item,j)=>{
+          if(j!=list.length-1){
+            let i = item.split('\t')
+            r.push({name:i[0],type:i[1],prop:i[2],addr:i[3],gnum:i[4]});
+          }
+        })
+        if(r.length>16){
+          message.error('剪贴数据不能超过16周')
+        }else if(r.length<=0){
+          message.error('无剪贴数据')
+        }else{
+          that.setState({expList:r})
         }
       },
       onCancel() {
@@ -169,7 +205,7 @@ class Tech extends Component {
                     <div className='m-item' style={{background:'#41BA00',color:'#fff'}} onClick={this.doImportT}>剪贴导入教学</div>
                   </Tooltip>
                   <Tooltip placement="right" title="Excel选择16行5列拷贝">
-                    <div className='m-item' style={{background:'#41BA00',color:'#fff'}}>剪贴导入实验</div>
+                    <div className='m-item' style={{background:'#41BA00',color:'#fff'}} onClick={this.doImportE}>剪贴导入实验</div>
                   </Tooltip>
                 </div>
 
@@ -428,22 +464,22 @@ class Tech extends Component {
                     {expList.length==0 && <div className='m-none'>暂无数据</div>}
 
                     {expList.map((item,i)=>(
-                      <div className='m-row-e' key={item.id}>
+                      <div className='m-row-e' key={i}>
                         <span onClick={()=>this.doDelExpItem(i)}>{i+1}</span>
-                        <Input value={item.name}/>
-                        <Select value={item.type} style={{width:'80px',marginLeft:'10px'}} size="small">
+                        <Input value={item.name} onChange={this.doChgE.bind(this,i,'name')}/>
+                        <Select value={item.type} style={{width:'80px',marginLeft:'10px'}} size="small" onChange={this.doChgE.bind(this,i,'type')}>
                           <Option value={'验证'}>验证</Option>
                           <Option value={'设计'}>设计</Option>
                           <Option value={'研究'}>研究</Option>
                           <Option value={'综合'}>综合</Option>
                           <Option value={'演示'}>演示</Option>
                         </Select>
-                        <Select value={item.prop} style={{width:'80px',marginLeft:'10px'}} size="small">
+                        <Select value={item.prop} style={{width:'80px',marginLeft:'10px'}} size="small" onChange={this.doChgE.bind(this,i,'prop')}>
                           <Option value={'必做'}>必做</Option>
                           <Option value={'选做'}>选做</Option>
                         </Select>
-                        <Input value={item.addr}/>
-                        <Input value={item.gnum}/>
+                        <Input value={item.addr} onChange={this.doChgE.bind(this,i,'addr')}/>
+                        <Input value={item.gnum} onChange={this.doChgE.bind(this,i,'gnum')}/>
                       </div>
                     ))}
                   </div>
