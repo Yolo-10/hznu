@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import {Tooltip,Switch,Input,Form,Spin,Select} from "antd"
+import {Tooltip,Switch,Input,Form,Spin,Select,Modal, message} from "antd"
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import {inject, observer} from 'mobx-react'
 import {isN} from '@util/fn'
 import * as urls from '@constant/urls'
@@ -7,6 +8,7 @@ import "./index.less"
 
 const { TextArea } = Input
 const { Option } = Select
+const { confirm } = Modal;
 const menuList = ['全部','基本信息','教学进度','实验进度']
 
 @inject('mainStore')
@@ -76,6 +78,13 @@ class Tech extends Component {
     this.setState({clsDetail:clsDetail})
   }
 
+  doChgT = (index,key,e)=>{
+    let val = e.currentTarget.value;
+    let {tecList} = this.state;
+    tecList[index][key] = val;
+    this.setState({tecList:tecList})
+  }
+
   doSave = async() =>{
     this.props.form.validateFields(async(err,values)=>{
       if(err) {return}
@@ -87,6 +96,35 @@ class Tech extends Component {
       let r = await this.store.post(urls.API_SAV_CLS,params);
       this.setState({loading:false,clsDetail:r.data,expList:r.expList,tecList:r.tecList})
     })
+  }
+
+  doImportT= ()=>{
+    let that = this
+    confirm({
+      title: '提示',
+      content: '你确认要将剪贴板的数据导入到教学进度？（原教学进度数据会被全部替换）',
+      async onOk() {
+        const r = [];
+        const text = await navigator.clipboard.readText();
+        const list = text.split('\r\n');
+        list.map((item,j)=>{
+          if(j!=list.length-1){
+            let i = item.split('\t');
+            r.push({cnt:i[0],method:i[1],task:i[2]})
+          }
+        })
+        if(r.length>16){
+          message.error('剪贴数据不能超过16周')
+        }else if(r.length<=0){
+          message.error('无剪贴数据')
+        }else{
+          that.setState({tecList:r})
+        }
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
   }
 
   render() {
@@ -128,7 +166,7 @@ class Tech extends Component {
 
                 <div className='m-fun'>
                   <Tooltip placement="right" title="Excel选择16行3列拷贝">
-                    <div className='m-item' style={{background:'#41BA00',color:'#fff'}}>剪贴导入教学</div>
+                    <div className='m-item' style={{background:'#41BA00',color:'#fff'}} onClick={this.doImportT}>剪贴导入教学</div>
                   </Tooltip>
                   <Tooltip placement="right" title="Excel选择16行5列拷贝">
                     <div className='m-item' style={{background:'#41BA00',color:'#fff'}}>剪贴导入实验</div>
@@ -368,9 +406,9 @@ class Tech extends Component {
                     {tecList.map((item,i)=>
                       <div className='m-row-t' key={i}>
                         <span onClick={()=>this.doDelTechItem(i)}>{i+1}</span>
-                        <Input value={item.cnt}/>
-                        <Input value={item.method}/>
-                        <Input value={item.task}/>
+                        <Input value={item.cnt} onChange={this.doChgT.bind(this,i,'cnt')}/>
+                        <Input value={item.method} onChange={this.doChgT.bind(this,i,'method')}/>
+                        <Input value={item.task} onChange={this.doChgT.bind(this,i,'task')}/>
                       </div>
                     )}
                   </div>

@@ -85,3 +85,20 @@ var fruits = ["Banana", "Orange", "Apple", "Mango"];
 fruits.splice(2,1); // ['Apple']
 fruits  //['Banana', 'Orange', 'Mango']
 ```
+
+### js剪贴板操作
+https://juejin.cn/post/6961718112852901896#heading-1
+
+1. `document.execCommand() `
+
+```js
+
+// 粘贴、chrome不支持
+document.execCommand('paste')  
+```
+
+2. `navigator.clipboard`
+
+3. `Clipboard` 库
+
+### 
