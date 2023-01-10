@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import {Tooltip,Switch,Input,Form,Spin,Select,Modal, message} from "antd"
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import {Tooltip,Switch,Input,Form,Spin,Select,Modal,Drawer,InputNumber,Button,message} from "antd"
 import {inject, observer} from 'mobx-react'
 import {isN} from '@util/fn'
 import * as urls from '@constant/urls'
@@ -24,7 +23,11 @@ class Tech extends Component {
       clsDetail:[],
       code:[],
       tecList:[],
-      expList:[]
+      expList:[],
+      showDraT:false,
+      showDraE:false,
+      fieT:{week:16},
+      fieE:[],
     }
   }
 
@@ -97,7 +100,7 @@ class Tech extends Component {
       if(err) {return}
 
       values.web = (values.web)? 1:0
-      const {expList,tecList,code} = this.state
+      let {expList,tecList,code} = this.state
       let params = {code:code,expList:expList,tecList:tecList,...values}
       this.setState({loading:true})
       let r = await this.store.post(urls.API_SAV_CLS,params);
@@ -163,9 +166,33 @@ class Tech extends Component {
     });
   }
 
+  doShowDraT = () => {
+    this.setState({showDraT:true})
+  };
+
+  doCloseDraT = () => {
+    this.setState({showDraT:false})
+  };
+
+  doChgFieT = (k,e) =>{
+    let val = e.currentTarget.value;
+    let {fieT} = this.state;
+    fieT[k] = val;
+    this.setState({fieT:fieT})
+  }
+
+  doSavFieT = () =>{
+    let {week,cnt,method,task} = this.state.fieT;
+    let ret = [];
+    for(let i=0;i<week;i++){
+      ret.push({cnt:cnt||'',method:method||'',task:task||''})
+    }
+    this.setState({tecList:ret,fieT:{week:16},showDraT:false})
+  }
+
   render() {
     const {getFieldDecorator} = this.props.form;
-    let {loading,clsList,clsDetail,tecList,expList,selMenu} = this.state;
+    let {loading,clsList,clsDetail,tecList,expList,selMenu,showDraT} = this.state;
     let cls = clsDetail[0]
 
     if(!isN(cls)){
@@ -211,7 +238,7 @@ class Tech extends Component {
 
                 <div className='m-fun'>
                   <Tooltip placement="right" title="批量生成若干周教学数据">
-                    <div className='m-item' style={{background:'#B8D800',color:'#fff'}}>批量教学进度</div>
+                    <div className='m-item' style={{background:'#B8D800',color:'#fff'}} onClick={this.doShowDraT}>批量教学进度</div>
                   </Tooltip>
                   <Tooltip placement="right" title="批量生成若干周实验数据">
                     <div className='m-item' style={{background:'#B8D800',color:'#fff'}}>批量实验进度</div>
@@ -489,6 +516,34 @@ class Tech extends Component {
             }
           </div>
         </div>
+
+        <Drawer
+          title="批量教学进度"
+          onClose={this.doCloseDraT}
+          visible={showDraT}
+          width={300}
+        >
+          <div className='g-field'>
+            <label>教学周</label>
+            <InputNumber min={1} max={16} defaultValue={16} style={{width:'100%'}} onChange={this.doChgFieT.bind(this,'week')}/>
+          </div>
+          <div className='g-field'>
+            <label>主要教学内容</label>
+            <TextArea rows={4}  onChange={this.doChgFieT.bind(this,'cnt')}/>
+          </div>
+          <div className='g-field'>
+            <label>教学形式及内容资料</label>
+            <TextArea rows={4} onChange={this.doChgFieT.bind(this,'method')}/>
+          </div>
+          <div className='g-field'>
+            <label>作业与辅导安排</label>
+            <TextArea rows={4} onChange={this.doChgFieT.bind(this,'task')}/>
+          </div>
+          <div className='g-fun'>
+            <Button onClick={this.doCloseDraT}>取消</Button>
+            <Button type="primary" onClick={this.doSavFieT}>生成数据</Button>
+          </div>
+        </Drawer>
       </Spin>
     )
   }
