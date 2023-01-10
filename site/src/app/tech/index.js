@@ -27,7 +27,7 @@ class Tech extends Component {
       showDraT:false,
       showDraE:false,
       fieT:{week:16},
-      fieE:[],
+      fieE:{week:16,type:'验证',prop:'必做',addr:'勤园13号楼208',gnum:1},
     }
   }
 
@@ -174,11 +174,26 @@ class Tech extends Component {
     this.setState({showDraT:false})
   };
 
+  doShowDraE = () => {
+    this.setState({showDraE:true})
+  }
+
+  doCloseDraE = () => {
+    this.setState({showDraE:false})
+  }
+
   doChgFieT = (k,e) =>{
-    let val = e.currentTarget.value;
+    let val = (k=='week')? e: e.currentTarget.value;
     let {fieT} = this.state;
     fieT[k] = val;
     this.setState({fieT:fieT})
+  }
+
+  doChgFieE = (k,e) =>{
+    let val = (k=='name' || k=='addr')? e.currentTarget.value:e;
+    let {fieE} = this.state;
+    fieE[k] = val;
+    this.setState({fieE:fieE})
   }
 
   doSavFieT = () =>{
@@ -190,9 +205,18 @@ class Tech extends Component {
     this.setState({tecList:ret,fieT:{week:16},showDraT:false})
   }
 
+  doSavFieE = () =>{
+    let {week,name,type,prop,addr,gnum} = this.state.fieE;
+    let ret = [];
+    for(let i=0;i<week;i++){
+      ret.push({name:name||'',type:type,prop:prop,addr:addr,gnum:gnum})
+    }
+    this.setState({expList:ret,fieE:{week:16,type:'验证',prop:'必做',addr:'勤园13号楼208',gnum:10},showDraE:false})
+  }
+
   render() {
     const {getFieldDecorator} = this.props.form;
-    let {loading,clsList,clsDetail,tecList,expList,selMenu,showDraT} = this.state;
+    let {loading,clsList,clsDetail,tecList,expList,selMenu,showDraT,showDraE} = this.state;
     let cls = clsDetail[0]
 
     if(!isN(cls)){
@@ -241,7 +265,7 @@ class Tech extends Component {
                     <div className='m-item' style={{background:'#B8D800',color:'#fff'}} onClick={this.doShowDraT}>批量教学进度</div>
                   </Tooltip>
                   <Tooltip placement="right" title="批量生成若干周实验数据">
-                    <div className='m-item' style={{background:'#B8D800',color:'#fff'}}>批量实验进度</div>
+                    <div className='m-item' style={{background:'#B8D800',color:'#fff'}} onClick={this.doShowDraE}>批量实验进度</div>
                   </Tooltip>
                 </div>
               </>
@@ -543,6 +567,50 @@ class Tech extends Component {
             <Button onClick={this.doCloseDraT}>取消</Button>
             <Button type="primary" onClick={this.doSavFieT}>生成数据</Button>
           </div>
+        </Drawer>
+
+        <Drawer
+          title="批量实验进度"
+          onClose={this.doCloseDraE}
+          visible={showDraE}
+          width={300}>
+            <div className='g-field'>
+              <label>教学周</label>
+              <InputNumber min={1} max={16} defaultValue={16} style={{width:'100%'}} onChange={this.doChgFieE.bind(this,'week')}/>
+            </div>
+            <div className='g-field'>
+              <label>实验项目名称</label>
+              <TextArea rows={2} onChange={this.doChgFieE.bind(this,'name')}/>
+            </div>
+            <div className='g-field'>
+              <label>实验性质</label>
+              <Select defaultValue={'验证'} onChange={this.doChgFieE.bind(this,'type')}>
+                <Option value={'验证'}>验证</Option>
+                <Option value={'设计'}>设计</Option>
+                <Option value={'研究'}>研究</Option>
+                <Option value={'综合'}>综合</Option>
+                <Option value={'演示'}>演示</Option>
+              </Select>
+            </div>
+            <div className='g-field'>
+              <label>实验要求</label>
+              <Select defaultValue={'必做'} onChange={this.doChgFieE.bind(this,'prop')}>
+                <Option value={'必做'}>必做</Option>
+                <Option value={'选做'}>选做</Option>
+              </Select>
+            </div>
+            <div className='g-field'>
+              <label>实验教室</label>
+              <Input defaultValue={'勤园13号楼208'} onChange={this.doChgFieE.bind(this,'addr')}/>
+            </div>
+            <div className='g-field'>
+              <label>每组人数</label>
+              <InputNumber min={1} max={10} defaultValue={1} style={{width:'100%'}} onChange={this.doChgFieE.bind(this,'gnum')}/>
+            </div>
+            <div className='g-fun'>
+              <Button onClick={this.doCloseDraE}>取消</Button>
+              <Button type='primary'  onClick={this.doSavFieE}>生成数据</Button>
+            </div>
         </Drawer>
       </Spin>
     )
