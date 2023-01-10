@@ -1,3 +1,19 @@
+## 一点问题
+
+### yarn start报错
+
+  ```json
+  "start": "set REACT_APP_MY_VAR=development&& react-app-rewired start",
+  ```
+
+### 文件中路径报错
+
+```jsx
+import {isN,msg} from '@util/fn'
+ //加上@符号
+```
+
+
 ## HTTP请求编码格式
 [参考链接](https://blog.csdn.net/Greenhand_BN/article/details/114750061)
 
@@ -22,3 +38,18 @@ var module = new Module();
 var exports = module.exports;
 ```
 `module.exports` 与 `exports` 的关系 形如`var a={}; var b=a;中a和b的区别
+
+## mysql数据库
+
+### 存储过程传递参数格式
+`'{"uid":"20050027"}'`
+`'{"uid":"20050027","code":"225037001"}'`
+
+### FIND_IN_SET
+- str 要查询的字符串
+- strList 字段名，参数以“,”分隔，如(1,2,6,8)
+- 查询字段(strList)中包含的结果，返回结果null或记录。
+
+```sql
+select * from tab_tech_main where FIND_IN_SET(`code`, _code);
+```

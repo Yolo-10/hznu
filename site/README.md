@@ -13,6 +13,32 @@ React 16.11.0
 - `login.js`中`this.props.form`,`props`中有`form`是因为有`Form.create()(Login)`
 - `Main.js`需要`new Main()`
 - `NavWrapper`组件上没有`history`对象，使用`withRouter`
+- mysql数据导入问题
+
+    ```sql
+    -- ----------------------------
+    -- View structure for view_cls_name
+    -- ---------------------------
+    DROP VIEW IF EXISTS `view_cls_name`;
+    CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_cls_name` AS select concat(`b`.`name`,'实践') AS `name` from (select trim(trailing '实践' from `a`.`name`) AS `name` from (select distinct `t`.`name` AS `name` from `hznu`.`tab_tech_main` `t` where (`t`.`name` like '%实践')) `a`) `b` where `b`.`name` in (select `hznu`.`tab_tech_main`.`name` from `hznu`.`tab_tech_main`);
+    ```
+
+    相关子查询不行，问题是 mysql版本过低
+
+    5.7及以上的版本才会支持相关子查询-----升级mysql
+
+- mysql版本升级以及出现问题
+
+    1. 卸载mysql：https://blog.csdn.net/weixin_32639437/article/details/113439600
+
+    2. 安装新版本：https://blog.csdn.net/weixin_42869365/article/details/83472466
+    3. 更新root密码：https://blog.csdn.net/qq_40757240/article/details/118068317 （不用这个，用这个会出现以下问题，直接用以下问题的解决办法）
+    4. navicat 连接 mysql 出现Client does not support authentication protocol requested by server：https://blog.csdn.net/u013700358/article/details/80306560
+    5. MySQL: Error Code: 3065  存储过程中 Expression #1 of ORDER BY clause is not in SELECT list,references column 'xxxxxxx' : https://blog.csdn.net/hanshanyunhai/article/details/105701771
+    6. 3065 问题还是存在：*** 重新运行数据库文档！！！***
+
+    7. 安装Mysql5.7报错Install/Remove of the Service Denied! ：用管理员身份打开命令行界面
+
 
 
 ## 学习
@@ -101,4 +127,21 @@ document.execCommand('paste')
 
 3. `Clipboard` 库
 
-### 
+### mysql存储过程
+https://www.w3cschool.cn/sqlserver/sqlserver-hw2328n6.html
+https://www.runoob.com/w3cnote/mysql-stored-procedure.html
+
+- 操作数据库语言SQL语句在执行的时候需要先编译 --> 然后执行
+- 存储过程是一组为了完成特定功能的SQL语句集，经编译后存储在数据库中，用户通过指定存储过程的名字并给定参数来调用执行它。
+
+#### 变量定义:
+`DECLARE variable_name [,variable_name...] datatype [DEFAULT value];`
+
+```sql
+DECLARE l_int int unsigned default 4000000;  
+DECLARE l_numeric number(8,2) DEFAULT 9.95;  
+DECLARE l_date date DEFAULT '1999-12-31';  
+```
+
+#### 变量赋值
+`SET 变量名 = 表达式值 [,variable_name = expression ...]`
