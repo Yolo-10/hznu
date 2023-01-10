@@ -202,7 +202,7 @@ class Tech extends Component {
     for(let i=0;i<week;i++){
       ret.push({cnt:cnt||'',method:method||'',task:task||''})
     }
-    this.setState({tecList:ret,fieT:{week:16},showDraT:false})
+    this.setState({tecList:ret,showDraT:false})
   }
 
   doSavFieE = () =>{
@@ -211,7 +211,7 @@ class Tech extends Component {
     for(let i=0;i<week;i++){
       ret.push({name:name||'',type:type,prop:prop,addr:addr,gnum:gnum})
     }
-    this.setState({expList:ret,fieE:{week:16,type:'验证',prop:'必做',addr:'勤园13号楼208',gnum:10},showDraE:false})
+    this.setState({expList:ret,showDraE:false})
   }
 
   render() {
