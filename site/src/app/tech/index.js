@@ -20,6 +20,7 @@ class Tech extends Component {
       loading:false,
       selMenu:0,
       clsList:[],
+      clsDefault:[],
       clsDetail:[],
       code:[],
       tecList:[],
@@ -49,7 +50,7 @@ class Tech extends Component {
     let params =  {code:code}
     this.setState({loading:true})
     let r = await this.store.post(urls.API_QRY_CLS_MAIN,params);
-    this.setState({loading:false, clsDetail:r.data, code:code, tecList:r.tecList, expList:r.expList})
+    this.setState({loading:false, clsDetail:r.data,clsDefault:r.data,code:code, tecList:r.tecList, expList:r.expList})
   }
 
   doSelMenu = (i) =>{
@@ -214,10 +215,30 @@ class Tech extends Component {
     this.setState({expList:ret,showDraE:false})
   }
 
+  doImpHis = () =>{
+    let that = this;
+    confirm({
+      title: '提示',
+      content: '你确认要导入历史课程吗？（原基本信息数据会被全部替换）',
+      async onOk(){
+        // TODO:这里的this为什么不存在，需要用that
+        // console.log('that',that)
+        // console.log('this',this)
+        let params = {code:that.state.code};
+        //TODO:没有加await时，返回的时promise对象
+        let r = await that.store.post(urls.API_QRY_CLS_MAIN_O,params)
+        that.setState({clsDetail:r.data})
+      },
+      onCancel(){
+        console.log('Cancel');
+      }
+    })
+  }
+
   render() {
     const {getFieldDecorator} = this.props.form;
-    let {loading,clsList,clsDetail,tecList,expList,selMenu,showDraT,showDraE} = this.state;
-    let cls = clsDetail[0]
+    let {loading,clsList,clsDetail,clsDefault,tecList,expList,selMenu,showDraT,showDraE} = this.state;
+    let cls = clsDetail[0],clsD = clsDefault[0]
 
     if(!isN(cls)){
       cls.w_hour = parseInt(cls?.t_hour)+parseInt(cls?.e_hour)
@@ -236,18 +257,18 @@ class Tech extends Component {
                 )}
               </div>
 
-              {(clsDetail.length>0) &&
+              {(clsDefault.length>0) &&
               <>
                 <div className='m-fun'>
-                  <div className='m-item' style={{background:'#21A557',color:'#fff'}} onClick={this.doSave}>保存数据</div>
+                  <div className='m-item' style={{background:'#21A578',color:'#fff'}} onClick={this.doSave}>保存数据</div>
                 </div>
 
                 <div className='m-fun'>
-                  <Tooltip placement="right" title="尚未支持">
-                    <div className='m-item' style={{background:'#666',color:'#fff'}}>导入历史课程</div>
+                  <Tooltip placement="right" title="导入历史课程基本信息">
+                    <div className='m-item' style={{background:'#21A541',color:'#fff'}} onClick={this.doImpHis}>导入历史课程</div>
                   </Tooltip>
                   <Tooltip placement="right" title="尚未支持">
-                    <div className='m-item' style={{background:'#666',color:'#fff'}}>导入同类课程</div>
+                    <div className='m-item' style={{background:'#21A541',color:'#fff'}}>导入同类课程</div>
                   </Tooltip>
                 </div>
 
@@ -273,20 +294,20 @@ class Tech extends Component {
               
             </div>
 
-            {(clsDetail.length===0) && <div className='m-tab_none'>cnt</div>}
+            {(clsDefault.length===0) && <div className='m-tab_none'>cnt</div>}
 
-            {(clsDetail.length>0) &&
+            {(clsDefault.length>0) &&
             <div className='m-tab_cnt'>
               <Form className="m-form" layout="horizontal" >
                 <div className='m-hd'>
-                  <div className='m-term'>{cls?.term}学年</div>
+                  <div className='m-term'>{clsD?.term}学年</div>
                   <div className='m-title'>
-                    <span>{cls?.name}</span>
-                    <span>{cls?.ename}</span>
+                    <span>{clsD?.name}</span>
+                    <span>{clsD?.ename}</span>
                   </div>
                   <div className='m-info'>
-                    <span>{cls?.cform}</span>
-                    <span>{cls?.cprop}</span>
+                    <span>{clsD?.cform}</span>
+                    <span>{clsD?.cprop}</span>
                     <Form.Item>
                       {getFieldDecorator('web',{
                         valuePropName: 'checked',
@@ -433,7 +454,7 @@ class Tech extends Component {
                   </div>
                   <div className={(selMenu==0 || selMenu==1)? "m-main":"m-main fn-hide"}>
                       <div className='m-tab'>
-                        {clsDetail.map((item,i)=>
+                        {clsDefault.map((item,i)=>
                           <div className='m-row' key={item.id}>
                             <span>{i+1}</span>
                             <span>{item.name}</span>

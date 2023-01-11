@@ -40,6 +40,14 @@ router.post('/qryClsMain',async(req,res,next)=>{
     let t = await callP(sql3,params,res)
     res.status(200).json({code:200,data:r,expList:e,tecList:t});
 })
+router.post('/qryClsMainO',async(req,res,next)=>{
+    let uid = decodeUser(req).uid;
+    let params = {uid:uid,code:req.body.code};
+
+    let sql = `CALL PROC_QRY_CLS_MAIN_O(?)`
+    let r = await callP(sql,params,res)
+    res.status(200).json({code:200,data:r});
+})
 
 router.post('/savCls',async(req,res,next)=>{
     let uid = decodeUser(req).uid
