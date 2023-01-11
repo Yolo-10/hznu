@@ -25,8 +25,10 @@ class Tech extends Component {
       code:[],
       tecList:[],
       expList:[],
+      samList:[],
       showDraT:false,
       showDraE:false,
+      showDraS:false,
       fieT:{week:16},
       fieE:{week:16,type:'验证',prop:'必做',addr:'勤园13号楼208',gnum:1},
     }
@@ -183,6 +185,14 @@ class Tech extends Component {
     this.setState({showDraE:false})
   }
 
+  doShowDraS = () => {
+    this.setState({showDraS:true})
+  }
+
+  doCloseDraS = () => {
+    this.setState({showDraS:false})
+  }
+
   doChgFieT = (k,e) =>{
     let val = (k=='week')? e: e.currentTarget.value;
     let {fieT} = this.state;
@@ -235,9 +245,24 @@ class Tech extends Component {
     })
   }
 
+  doImpSame = async() =>{
+    let params = {code:this.state.code};
+    let r = await this.store.post(urls.API_QRY_SAME_CLS,params)
+    this.setState({samList:r.data})
+    this.doShowDraS();
+  }
+
+  doSelSame = async(uid,code) =>{
+    let params = {uid:uid,code:code}
+    let r = await this.store.post(urls.API_QRY_CLS_MAIN,params)
+    this.setState({clsAss:r.data[0],tecList:r.tecList,expList:r.expList})
+    this.doCloseDraS()
+  }
+
   render() {
     const {getFieldDecorator} = this.props.form;
-    let {loading,clsList,clsDetail,clsAss,tecList,expList,selMenu,showDraT,showDraE} = this.state;
+    let {loading,clsList,clsDetail,clsAss,tecList,samList,expList,selMenu,
+      showDraT,showDraE,showDraS} = this.state;
     let cls = clsDetail[0]
 
     if(!isN(cls)){
@@ -267,8 +292,8 @@ class Tech extends Component {
                   <Tooltip placement="right" title="导入历史课程到辅助信息">
                     <div className='m-item' style={{background:'#21A541',color:'#fff'}} onClick={this.doImpHis}>导入历史课程</div>
                   </Tooltip>
-                  <Tooltip placement="right" title="尚未支持">
-                    <div className='m-item' style={{background:'#21A541',color:'#fff'}}>导入同类课程</div>
+                  <Tooltip placement="right" title="导入同类课程全部信息">
+                    <div className='m-item' style={{background:'#21A541',color:'#fff'}} onClick={this.doImpSame}>导入同类课程</div>
                   </Tooltip>
                 </div>
 
@@ -634,6 +659,21 @@ class Tech extends Component {
               <Button onClick={this.doCloseDraE}>取消</Button>
               <Button type='primary'  onClick={this.doSavFieE}>生成数据</Button>
             </div>
+        </Drawer>
+
+        <Drawer
+         title="选择一项同类课程进行导入"
+         onClose={this.doCloseDraS}
+         visible={showDraS}
+         width={300}
+        >
+          {samList.map((item,i)=>
+              <div className='g-field' key={item.uid}>
+                <Button type='primary' onClick={this.doSelSame.bind(this,item.uid,item.code)} >
+                  {item.term} {item.uname} {item.bname}
+                </Button>
+              </div>
+          )}
         </Drawer>
       </Spin>
     )

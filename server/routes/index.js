@@ -29,7 +29,7 @@ router.post('/qryCls',async(req,res,next)=>{
     res.status(200).json({code:200,data:r})
 })
 router.post('/qryClsMain',async(req,res,next)=>{
-    let uid = decodeUser(req).uid;
+    let uid = req.body.uid || decodeUser(req).uid;
     let params = {uid:uid,code:req.body.code};
 
     let sql1 = `CALL PROC_QRY_CLS_MAIN(?)`
@@ -45,6 +45,14 @@ router.post('/qryClsMainO',async(req,res,next)=>{
     let params = {uid:uid,code:req.body.code};
 
     let sql = `CALL PROC_QRY_CLS_MAIN_O(?)`
+    let r = await callP(sql,params,res)
+    res.status(200).json({code:200,data:r});
+})
+router.post('/qrySameCls',async(req,res,next)=>{
+    let uid = decodeUser(req).uid;
+    let params = {uid:uid,code:req.body.code};
+
+    let sql = `CALL PROC_QRY_SAME_CLS(?)`
     let r = await callP(sql,params,res)
     res.status(200).json({code:200,data:r});
 })
