@@ -8,7 +8,7 @@ import "./index.less"
 const { TextArea } = Input
 const { Option } = Select
 const { confirm } = Modal;
-const menuList = ['全部','基本信息','教学进度','实验进度']
+const menuList = ['全部','基本信息','辅助信息','教学进度','实验进度']
 
 @inject('mainStore')
 @observer
@@ -20,8 +20,8 @@ class Tech extends Component {
       loading:false,
       selMenu:0,
       clsList:[],
-      clsDefault:[],
       clsDetail:[],
+      clsAss:[],
       code:[],
       tecList:[],
       expList:[],
@@ -50,7 +50,7 @@ class Tech extends Component {
     let params =  {code:code}
     this.setState({loading:true})
     let r = await this.store.post(urls.API_QRY_CLS_MAIN,params);
-    this.setState({loading:false, clsDetail:r.data,clsDefault:r.data,code:code, tecList:r.tecList, expList:r.expList})
+    this.setState({loading:false,clsDetail:r.data,clsAss:r.data[0],code:code, tecList:r.tecList, expList:r.expList})
   }
 
   doSelMenu = (i) =>{
@@ -105,7 +105,7 @@ class Tech extends Component {
       let params = {code:code,expList:expList,tecList:tecList,...values}
       this.setState({loading:true})
       let r = await this.store.post(urls.API_SAV_CLS,params);
-      this.setState({loading:false,clsDetail:r.data,expList:r.expList,tecList:r.tecList})
+      this.setState({loading:false,clsDetail:r.data,clsAss:r.data[0],expList:r.expList,tecList:r.tecList})
     })
   }
 
@@ -219,7 +219,7 @@ class Tech extends Component {
     let that = this;
     confirm({
       title: '提示',
-      content: '你确认要导入历史课程吗？',
+      content: '你确认要导入历史课程到辅助信息吗？（原辅助信息数据会被全部替换）',
       async onOk(){
         // TODO:这里的this为什么不存在，需要用that
         // console.log('that',that)
@@ -227,7 +227,7 @@ class Tech extends Component {
         let params = {code:that.state.code};
         //TODO:没有加await时，返回的时promise对象
         let r = await that.store.post(urls.API_QRY_CLS_MAIN_O,params)
-        that.setState({clsDetail:r.data})
+        that.setState({clsAss:r.data[0]})
       },
       onCancel(){
         console.log('Cancel');
@@ -237,8 +237,8 @@ class Tech extends Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
-    let {loading,clsList,clsDetail,clsDefault,tecList,expList,selMenu,showDraT,showDraE} = this.state;
-    let cls = clsDetail[0],clsD = clsDefault[0]
+    let {loading,clsList,clsDetail,clsAss,tecList,expList,selMenu,showDraT,showDraE} = this.state;
+    let cls = clsDetail[0]
 
     if(!isN(cls)){
       cls.w_hour = parseInt(cls?.t_hour)+parseInt(cls?.e_hour)
@@ -257,7 +257,7 @@ class Tech extends Component {
                 )}
               </div>
 
-              {(clsDefault.length>0) &&
+              {(clsDetail.length>0) &&
               <>
                 <div className='m-fun'>
                   <div className='m-item' style={{background:'#21A578',color:'#fff'}} onClick={this.doSave}>保存数据</div>
@@ -294,20 +294,20 @@ class Tech extends Component {
               
             </div>
 
-            {(clsDefault.length===0) && <div className='m-tab_none'>cnt</div>}
+            {(clsDetail.length===0) && <div className='m-tab_none'>cnt</div>}
 
-            {(clsDefault.length>0) &&
+            {(clsDetail.length>0) &&
             <div className='m-tab_cnt'>
               <Form className="m-form" layout="horizontal" >
                 <div className='m-hd'>
-                  <div className='m-term'>{clsD?.term}学年</div>
+                  <div className='m-term'>{cls?.term}学年</div>
                   <div className='m-title'>
-                    <span>{clsD?.name}</span>
-                    <span>{clsD?.ename}</span>
+                    <span>{cls?.name}</span>
+                    <span>{cls?.ename}</span>
                   </div>
                   <div className='m-info'>
-                    <span>{clsD?.cform}</span>
-                    <span>{clsD?.cprop}</span>
+                    <span>{cls?.cform}</span>
+                    <span>{cls?.cprop}</span>
                     <Form.Item>
                       {getFieldDecorator('web',{
                         valuePropName: 'checked',
@@ -454,7 +454,7 @@ class Tech extends Component {
                   </div>
                   <div className={(selMenu==0 || selMenu==1)? "m-main":"m-main fn-hide"}>
                       <div className='m-tab'>
-                        {clsDefault.map((item,i)=>
+                        {clsDetail.map((item,i)=>
                           <div className='m-row' key={item.id}>
                             <span>{i+1}</span>
                             <span>{item.name}</span>
@@ -466,40 +466,42 @@ class Tech extends Component {
                         )}
                       </div>
                   </div>
-                  <div className={(selMenu==0 || selMenu==1)? "m-main":"m-main fn-hide"}>
+                </>
+
+                <div className={(selMenu==0 || selMenu==2)? "m-main":"m-main fn-hide"} style={{'margin': '35px 0 0'}}>
+                    <div className='m-tl'>辅助信息</div>
                     <div className='m-tab'>
                       <label>课程描述及与其他课程关系<em>(不超过200字)</em></label>
                       <Form.Item>
                         {getFieldDecorator('desc',{
-                          initialValue:cls?.desc
+                          initialValue:clsAss?.desc
                         })(<TextArea maxLength={200}/>)}
                       </Form.Item>
 
                       <label>使用教材与参考书目<em>(不超过200字)</em></label>
                       <Form.Item>
                         {getFieldDecorator('mate',{
-                          initialValue:cls?.mate
+                          initialValue:clsAss?.mate
                         })(<TextArea maxLength={200}/>)}
                       </Form.Item>
 
                       <label>课程考核<em>(不超过200字)</em></label>
                       <Form.Item>
                         {getFieldDecorator('exam',{
-                          initialValue:cls?.exam
+                          initialValue:clsAss?.exam
                         })(<TextArea maxLength={200}/>)}
                       </Form.Item>
 
                       <label>教学方法与手段及相关要求<em>(不超过200字)</em></label>
                       <Form.Item>
                         {getFieldDecorator('method',{
-                          initialValue:cls?.method
+                          initialValue:clsAss?.method
                         })(<TextArea maxLength={200}/>)}
                       </Form.Item>
                     </div>
                   </div>
-                </>
 
-                <div className={(selMenu==0 || selMenu==2)? "m-main":"m-main fn-hide"} style={{'margin': '35px 0 0'}}>
+                <div className={(selMenu==0 || selMenu==3)? "m-main":"m-main fn-hide"} style={{'margin': '35px 0 0'}}>
                   <div className='m-tl'>教学进度</div>
                   <div className='m-tech'>
                     <div className='m-row-t'>
@@ -522,7 +524,7 @@ class Tech extends Component {
                   </div>
                 </div>
 
-                <div className={(selMenu==0 || selMenu==3)? "m-main":"m-main fn-hide"} style={{'margin': '35px 0 0'}}>
+                <div className={(selMenu==0 || selMenu==4)? "m-main":"m-main fn-hide"} style={{'margin': '35px 0 0'}}>
                   <div className='m-tl'>实验进度</div>
                   <div className='m-tech'>
                     <div className='m-row-e'>
