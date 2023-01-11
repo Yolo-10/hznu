@@ -264,7 +264,7 @@ class Tech extends Component {
                 </div>
 
                 <div className='m-fun'>
-                  <Tooltip placement="right" title="导入历史课程基本信息">
+                  <Tooltip placement="right" title="导入历史课程到辅助信息">
                     <div className='m-item' style={{background:'#21A541',color:'#fff'}} onClick={this.doImpHis}>导入历史课程</div>
                   </Tooltip>
                   <Tooltip placement="right" title="尚未支持">
