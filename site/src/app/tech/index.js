@@ -219,7 +219,7 @@ class Tech extends Component {
     let that = this;
     confirm({
       title: '提示',
-      content: '你确认要导入历史课程吗？（原基本信息数据会被全部替换）',
+      content: '你确认要导入历史课程吗？',
       async onOk(){
         // TODO:这里的this为什么不存在，需要用that
         // console.log('that',that)
