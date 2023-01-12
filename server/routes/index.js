@@ -2,8 +2,19 @@ var express = require('express');
 var jwt = require('jsonwebtoken') 
 var router = express.Router();
 var db = require('../db/db')
+var PizZip = require('pizzip')
+var Doc = require('docxtemplater')
+var fs = require('fs')
+var path = require('path')
 
 const SECRET_KEY = 'ANT-SYSTEM'
+const INPUT_PATH = '../input.docx'
+
+const OPTIONS = {type: "nodebuffer",compression: "DEFLATE"}
+//获取input.docx的二进制数据
+const DOC_CNT = fs.readFileSync(path.resolve(__dirname,INPUT_PATH))
+const ZIP = new PizZip(DOC_CNT);
+const DOC = new Doc(ZIP, {paragraphLoop: true,linebreaks: true,});
 
 //async会返回一个promise对象返回resolve的值
 router.post('/login',async(req,res,next) =>{
@@ -69,6 +80,20 @@ router.post('/savCls',async(req,res,next)=>{
     let e = await callP(sql2,params,res)
     let t = await callP(sql3,params,res)
     res.status(200).json({code: 200, data: r, tecList: t, expList: e})
+})
+
+router.post('/export',async(req,res,next)=>{
+    DOC.render({
+        name: "John",
+        ename: "Doe",
+        week: "0652455478",
+        desc: "New Website",
+    });
+
+    let buf = DOC.getZip().generate(OPTIONS);
+    fs.writeFileSync(path.resolve(__dirname, "../output.docx"), buf);
+
+    res.status(200).json({message:'导出成功'})
 })
 
 
