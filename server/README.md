@@ -58,3 +58,25 @@ select * from tab_tech_main where FIND_IN_SET(`code`, _code);
 - docxtemplater:doc模块生成库
 - pizzip:实现文档解析和压缩
 - file-saver:下载库
+
+### 功能实践历程
+1. 导出一个word
+```
+问题1： //得到的是RowDataPacket,要取第一个的话，就需要转换一下
+问题2：未定义的字段undefined
+```
+
+取出的数据时
+打包zip
+导出多个word
+
+### import 和require的区别
+>   https://juejin.cn/post/6844903912487518221#heading-0
+
+1. require,exports,module.exports属于CommonJS规范,import,export,export default属于ES6规范
+2. require支持动态导入,动态匹配路径,import对这两者都不支持
+3. require是运行时调用,import是编译时调用
+4. require是赋值过程,import是解构过程
+5. 对于export和export default 不同的使用方式,import就要采取不同的引用方式,主要区别在于是否存在{},export导出的,6. import导入需要{},导入和导出一一对应,export default默认导出的,import导入不需要{}
+7. exports是module.exports一种简写形式,不能直接给exports赋值
+8. 当直接给module.exports赋值时,exports会失效
