@@ -86,11 +86,12 @@ router.post('/export',async(req,res,next)=>{
     let e = await callP(sql2,params,res)
     let t = await callP(sql3,params,res)
 
+    let c = JSON.parse(JSON.stringify(r))[0];
     docxTemplate.generateZip({
-        cls:JSON.parse(JSON.stringify(r))[0],
+        cls:c,
         tecList:t,
         expList:e,
-    },INPUT_PATH,'hhh.docx',OUTPUT_PATH)
+    },INPUT_PATH,`${c.m_tech}_${c.name}.docx`,OUTPUT_PATH)
 
     res.status(200).json({message:'导出成功'})
 })
