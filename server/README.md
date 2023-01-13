@@ -62,13 +62,15 @@ select * from tab_tech_main where FIND_IN_SET(`code`, _code);
 ### 功能实践历程
 1. 导出一个word
 ```
-问题1： //得到的是RowDataPacket,要取第一个的话，就需要转换一下
+问题1：得到的是RowDataPacket,如何取第一个
+解决：处理数据，将RowDataPacket转换成对象，JSON.parse(JSON.stringify(data))
 问题2：未定义的字段undefined
+解决：配置项中增加nullGetter
 ```
 
-取出的数据时
-打包zip
-导出多个word
+2. 打包zip
+
+3. 批量导出个word
 
 ### import 和require的区别
 >   https://juejin.cn/post/6844903912487518221#heading-0
