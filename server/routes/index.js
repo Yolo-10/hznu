@@ -2,7 +2,7 @@ var express = require('express');
 var jwt = require('jsonwebtoken') 
 var router = express.Router();
 var db = require('../db/db')
-var docxTemplate = require('../fn/docxTemplate')
+var docxTemplate = require('../util/docxTemplate')
 
 const SECRET_KEY = 'ANT-SYSTEM'
 const INPUT_PATH = '../input.docx'
@@ -76,22 +76,23 @@ router.post('/savCls',async(req,res,next)=>{
 })
 
 router.post('/export',async(req,res,next)=>{
-    let uid = req.body.uid || decodeUser(req).uid;
-    let params = {uid:uid,code:"225037001,225037301"};
+    let sql1 = `CALL PROC_QRY_ALL_USR_CLS`
+    let sql2 = `CALL PROC_QRY_CLS_MAIN(?)`
+    let sql3 = `CALL PROC_QRY_EXP(?)`
+    let sql4 = `CALL PROC_QRY_TECH(?)`
 
-    let sql1 = `CALL PROC_QRY_CLS_MAIN(?)`
-    let sql2 = `CALL PROC_QRY_EXP(?)`
-    let sql3 = `CALL PROC_QRY_TECH(?)`
-    let r = await callP(sql1,params,res)
-    let e = await callP(sql2,params,res)
-    let t = await callP(sql3,params,res)
+    let data = []
+    let p = await callP(sql1,{},res)
+    let pet = clone(p)
 
-    let c = JSON.parse(JSON.stringify(r))[0];
-    docxTemplate.generateZip({
-        cls:c,
-        tecList:t,
-        expList:e,
-    },INPUT_PATH,`${c.m_tech}_${c.name}.docx`,OUTPUT_PATH)
+    for(let i=0;i<pet.length;i++){
+        let r = await callP(sql2,pet[i],res)
+        let e = await callP(sql3,pet[i],res)
+        let t = await callP(sql4,pet[i],res)
+        let c = (clone(r))[0];
+        data.push({cls:c,tecList:t,expList:e,fname:`${c.m_tech}_${c.name}.docx`})
+    }
+    docxTemplate.generateZip(data,INPUT_PATH,OUTPUT_PATH)
 
     res.status(200).json({message:'导出成功'})
 })

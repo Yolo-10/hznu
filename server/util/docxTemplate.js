@@ -22,12 +22,15 @@ const generateDoc = (data,iPath,oPath) =>{
  * @param {*} oPath 生成的zip存储位置
  * @param {*} docName doc文件名
  */
-const generateZip = (data,iPath,docName,oPath) =>{
+const generateZip = (data,iPath,oPath) =>{
     let zip = new pizZip()
     
     //文件放入zip包中，生成zip
-    zip.file(docName, getFileBuf(data,iPath));
-    let buf = zip.generate(ZIP_OPTIONS);
+    data.map((item)=>{
+        zip.file(item.fname, getFileBuf(data,iPath));
+    })
+
+    let buf = zip.generate(ZIP_OPTIONS);    
     fs.writeFileSync(path.resolve(__dirname, oPath), buf);
 }
 

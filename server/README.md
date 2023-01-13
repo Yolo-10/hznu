@@ -85,6 +85,34 @@ fs.writeFileSync(path.resolve(__dirname, oPath), buf);
 ```
 3. 批量导出个word
 
+问题1：获取每个教师每个课程对应的uname、code等
+解决：思考逻辑过程，灵活运用group by、GROUP_CONCAT、distinct
+问题2：由于clone(p).map内是异步任务，await对应的是map内的async,console.log('data',data) 中data为空
+
+```js
+clone(p).map(async(item)=>{
+    let r = await callP(sql2,item,res)
+    let e = await callP(sql3,item,res)
+    let t = await callP(sql4,item,res)
+    let c = (clone(r))[0];
+    data.push({cls:c,tecList:t,expList:e,fname:`${c.m_tech}_${c.name}.docx`})
+})
+console.log('data',data) 
+docxTemplate.generateZip(data,INPUT_PATH,OUTPUT_PATH)
+```
+
+解决：思考原因，不采用map执行异步任务，用for循环,await对应的是外层的async
+```js
+for(let i=0;i<pet.length;i++){
+    let r = await callP(sql2,pet[i],res)
+    let e = await callP(sql3,pet[i],res)
+    let t = await callP(sql4,pet[i],res)
+    let c = (clone(r))[0];
+    data.push({cls:c,tecList:t,expList:e,fname:`${c.m_tech}_${c.name}.docx`})
+}
+docxTemplate.generateZip(data,INPUT_PATH,OUTPUT_PATH)
+```
+
 ### import 和require的区别
 >   https://juejin.cn/post/6844903912487518221#heading-0
 
