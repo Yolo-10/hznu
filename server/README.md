@@ -54,7 +54,9 @@ var exports = module.exports;
 select * from tab_tech_main where FIND_IN_SET(`code`, _code);
 ```
 
-### 导出zip
+## 导出zip
+
+### 使用的js库
 - docxtemplater:doc模块生成库
 - pizzip:实现文档解析和压缩
 - file-saver:下载库

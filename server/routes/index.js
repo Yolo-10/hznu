@@ -6,7 +6,7 @@ var docxTemplate = require('../fn/docxTemplate')
 
 const SECRET_KEY = 'ANT-SYSTEM'
 const INPUT_PATH = '../input.docx'
-// const OUTPUT_PATH = '../output.dox'
+// const OUTPUT_PATH = '../output.docx'
 const OUTPUT_PATH = '../output.zip'
 
 //async会返回一个promise对象返回resolve的值
