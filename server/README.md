@@ -59,13 +59,13 @@ select * from tab_tech_main where FIND_IN_SET(`code`, _code);
 - pizzip:实现文档解析和压缩
 - file-saver:下载库
 
-### 功能实践历程
+### 导出pdf功能实践历程
 1. 导出一个word
 ```
 问题1：得到的是RowDataPacket,如何取第一个
 解决：处理数据，将RowDataPacket转换成对象，JSON.parse(JSON.stringify(data))
 问题2：未定义的字段undefined
-解决：配置项中增加nullGetter
+解决：配置项中增加nullGetter选项
 ```
 
 2. 打包zip
