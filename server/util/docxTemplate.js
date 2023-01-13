@@ -20,7 +20,7 @@ const generateDoc = (data,iPath,oPath) =>{
  * @param {} data 数据
  * @param {*} iPath 模板文件地址
  * @param {*} oPath 生成的zip存储位置
- * @param {*} docName doc文件名
+ * @param {*} item.fname doc文件名
  */
 const generateZip = (data,iPath,oPath) =>{
     let zip = new pizZip()
