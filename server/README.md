@@ -69,7 +69,18 @@ select * from tab_tech_main where FIND_IN_SET(`code`, _code);
 ```
 
 2. 打包zip
+```js
+//新建zip实例
+let zip = new pizZip()
 
+//生成单个docx数据buf_doc
+//....
+
+//doc加入zip包中，并生成zip
+zip.file(数据名, buf_doc);
+let buf = zip.generate(ZIP_OPTIONS);
+fs.writeFileSync(path.resolve(__dirname, oPath), buf);
+```
 3. 批量导出个word
 
 ### import 和require的区别

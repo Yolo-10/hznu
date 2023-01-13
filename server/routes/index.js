@@ -6,7 +6,8 @@ var docxTemplate = require('../fn/docxTemplate')
 
 const SECRET_KEY = 'ANT-SYSTEM'
 const INPUT_PATH = '../input.docx'
-const OUTPUT_PATH = '../output.dox'
+// const OUTPUT_PATH = '../output.dox'
+const OUTPUT_PATH = '../output.zip'
 
 //async会返回一个promise对象返回resolve的值
 router.post('/login',async(req,res,next) =>{
@@ -85,11 +86,11 @@ router.post('/export',async(req,res,next)=>{
     let e = await callP(sql2,params,res)
     let t = await callP(sql3,params,res)
 
-    docxTemplate.generateDoc({
+    docxTemplate.generateZip({
         cls:JSON.parse(JSON.stringify(r))[0],
         tecList:t,
         expList:e,
-    },INPUT_PATH,OUTPUT_PATH)
+    },INPUT_PATH,'hhh.docx',OUTPUT_PATH)
 
     res.status(200).json({message:'导出成功'})
 })
