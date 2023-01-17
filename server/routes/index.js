@@ -5,9 +5,9 @@ var db = require('../db/db')
 var docxTemplate = require('../util/docxTemplate')
 
 const SECRET_KEY = 'ANT-SYSTEM'
-const INPUT_PATH = '../input.docx'
+const INPUT_NAME = 'input.docx'
 // const OUTPUT_PATH = '../output.docx'
-const OUTPUT_PATH = '../output.zip'
+const OUTPUT_NAME = 'output.zip'
 
 //async会返回一个promise对象返回resolve的值
 router.post('/login',async(req,res,next) =>{
@@ -94,7 +94,7 @@ router.post('/export',async(req,res,next)=>{
         c.a_hour = c.w_hour*16
         data.push({cls:c,tecList:t,expList:e,fname:`${c.m_tech}_${c.name}.docx`})
     }
-    docxTemplate.generateZip(data,INPUT_PATH,OUTPUT_PATH)
+    docxTemplate.generateZip(data,INPUT_NAME,OUTPUT_NAME)
 
     res.status(200).json({message:'导出成功'})
 })
