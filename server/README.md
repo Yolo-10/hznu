@@ -113,6 +113,14 @@ for(let i=0;i<pet.length;i++){
 docxTemplate.generateZip(data,INPUT_PATH,OUTPUT_PATH)
 ```
 
+4. 前端下载zip包
+（1）服务端返回zip包地址路径
+（2）前端获取服务器内zip路径，window直接获取该资源下载，以下两种方法皆可
+ ```js
+window.open(urls.API_SERVER + r.path);
+window.location.href = urls.API_SERVER + r.path;
+ ```
+
 ### import 和require的区别
 >   https://juejin.cn/post/6844903912487518221#heading-0
 

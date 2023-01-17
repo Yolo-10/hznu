@@ -96,7 +96,7 @@ router.post('/export',async(req,res,next)=>{
     }
     docxTemplate.generateZip(data,INPUT_NAME,OUTPUT_NAME)
 
-    res.status(200).json({message:'导出成功'})
+    res.status(200).json({message:'导出成功',path:`/${OUTPUT_NAME}`})
 })
 
 

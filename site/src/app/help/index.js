@@ -11,11 +11,12 @@ export default class Help extends Component {
     this.store = this.props.mainStore
   }
 
-  doExport = ()=>{
-    console.log(111)
-    // console.log(this.store,'store');
-    let r = this.store.post(urls.API_EXPORT);
-    console.log(r)
+  doExport = async()=>{
+    let r = await this.store.post(urls.API_EXPORT);
+    
+    // 获取服务器内zip路径，window直接获取该资源下载，以下两种方法皆可
+    // window.open(urls.API_SERVER + r.path);
+    window.location.href = urls.API_SERVER + r.path;
   }
 
   render() {
