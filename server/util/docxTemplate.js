@@ -26,8 +26,8 @@ const generateZip = (data,iPath,oPath) =>{
     let zip = new pizZip()
     
     //文件放入zip包中，生成zip
-    data.map((item)=>{
-        zip.file(item.fname, getFileBuf(data,iPath));
+    data.map((item,i)=>{
+        zip.file(item.fname, getFileBuf(data[i],iPath));
     })
 
     let buf = zip.generate(ZIP_OPTIONS);    

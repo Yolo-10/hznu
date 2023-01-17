@@ -90,6 +90,8 @@ router.post('/export',async(req,res,next)=>{
         let e = await callP(sql3,pet[i],res)
         let t = await callP(sql4,pet[i],res)
         let c = (clone(r))[0];
+        c.w_hour = parseInt(c?.t_hour)+parseInt(c.e_hour)
+        c.a_hour = c.w_hour*16
         data.push({cls:c,tecList:t,expList:e,fname:`${c.m_tech}_${c.name}.docx`})
     }
     docxTemplate.generateZip(data,INPUT_PATH,OUTPUT_PATH)
