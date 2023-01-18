@@ -1,4 +1,3 @@
-//TODO:待了解
 import {  notification } from 'antd'
 
 var unitList = {tp:'℃',rh:'%',dv:'g/Kg',hv:'kj/kg',fr:'hz',po:'kw',poa:'kw',el:'kwh',ela:'kwh',ffl:'m³/h',fsp:'m/s',fpr:'Pa',vls:'',vlp:'%',prd:'Pa',coh:'',son:'',sof:'',sma:'',wsp:'m/s',wfl:'m³/h',wfla:'m³/h',wtpi:'℃',wtpo:'℃',chcp:'kw',chcpa:'kw',ot1:'',ot2:'',ot3:''}

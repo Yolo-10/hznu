@@ -30,5 +30,4 @@ class Main extends BaseActions {
     }
 }
 
-//TODO:new Main!!!!
 export default new Main();

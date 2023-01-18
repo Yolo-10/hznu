@@ -54,25 +54,24 @@
                 padding: 0 20px;
                 font-size: 14px;
                 cursor: pointer;
-                //TODO:Attention
                 transition: .3s;
             }
 
-            &:hover>.m-sub_menu{
+            :hover>.m-sub_menu{
                 display: block;
             }
 
-            //TODO:二级目录待看
             .m-sub_menu {
                 position: absolute;
                 bottom: 0;
-                transform: translate(0, 100%);
                 background: #fff;
                 width: 100%;
                 display:none;
                 color: #333;
                 transition: .5s;
                 z-index: 99999;
+                // 非常巧妙！！！
+                transform: translate(0, 100%); 
       
                 .m-sub {
                   display: flex;

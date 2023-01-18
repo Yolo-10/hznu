@@ -42,12 +42,32 @@ React 16.11.0
 
 
 ## 学习
-### CSS属性`ImeMode`控制输入法
+### CSS属性
+- `ImeMode`控制输入法
 `ime-mode` : `auto` | `active` | `inactive` | `disabled`
 1. `auto`  : 默认值。不影响IME(Input Method Editors 输入法编辑器)的状态。与不指定 ime-mode 属性时相同
 2. `active`  : 指定所有使用IME输入的字符。即激活本地语言输入法。用户仍可以撤销激活IME
 3. `inactive`  : 指定所有不使用IME输入的字符。即激活非本地语言。用户仍可以撤销激活IME
 4. `disabled`  : 完全禁用IME。对于有焦点的控件(如输入框)，用户不可以激活IME
+
+- `box-shadow`: 阴影效果
+    ```less
+    //box-shadow： x偏移量 y偏移量 阴影模糊半径 颜色
+    box-shadow: 0 0.05em 0.25em rgb(0 0 0 / 20%);
+    ```
+
+- `order`: 设置弹性盒对象元素的顺序
+例子：https://www.runoob.com/try/try.php?filename=trycss3_order
+
+- `transition`：过渡效果
+
+### `path.resolve`
+```js
+path.resolve(__dirname,'src')
+// __dirname 当前模块的目录名
+// path.resolve(__dirname,'src') 返回（ 当前模块的目录/src ）
+```
+
 
 ### Mobx中的`toJS`
 将对象转换成JS

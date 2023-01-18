@@ -3,6 +3,7 @@ import {message} from 'antd'
 import jwt from './token'
 
 //axios拦截器
+// allRes是否直接返回res,无论状态码是否为200
 export default(url,option = {},allRes = false) => {
     let token = jwt.getToken()
 
@@ -15,8 +16,6 @@ export default(url,option = {},allRes = false) => {
         ...option
     }).then(r => {
         if(allRes){
-            // TODO:????????
-            // console.log('allRES',allRes);
             return r.data
         }
 

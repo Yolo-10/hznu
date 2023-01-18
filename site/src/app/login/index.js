@@ -8,7 +8,6 @@ import * as urls from '@constant/urls'
 import './index.less'
 import logo from '@/img/logo_w.svg'
 
-//TODO:环境变量
 @inject('mainStore')
 @observer
 class Login extends Component {

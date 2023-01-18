@@ -48,7 +48,6 @@ class Tech extends Component {
   }
 
   doSelCls = async(code) =>{
-    //TODO:bind的作用
     let params =  {code:code}
     this.setState({loading:true})
     let r = await this.store.post(urls.API_QRY_CLS_MAIN,params);
@@ -231,11 +230,10 @@ class Tech extends Component {
       title: '提示',
       content: '你确认要导入历史课程到辅助信息吗？（原辅助信息数据会被全部替换）',
       async onOk(){
-        // TODO:这里的this为什么不存在，需要用that
-        // console.log('that',that)
-        // console.log('this',this)
+        // console.log('that',that) //that Tech ....
+        // console.log('this',this) //this undefined....
         let params = {code:that.state.code};
-        //TODO:没有加await时，返回的时promise对象
+        //没有加await时，返回的是promise对象
         let r = await that.store.post(urls.API_QRY_CLS_MAIN_O,params)
         that.setState({clsAss:r.data[0]})
       },

@@ -21,7 +21,6 @@ module.exports = override(
     }),
     addDecoratorsLegacy(),
     disableEsLint(),
-    //TODO：
     addWebpackAlias({
         '@':path.resolve(__dirname,'src'),
         '@app':path.resolve(__dirname,'src/app'),

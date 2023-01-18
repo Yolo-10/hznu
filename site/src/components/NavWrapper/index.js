@@ -8,8 +8,10 @@ import {isN} from '@/util/fn.js'
 import {getAllToken} from  '@/util/token.js'
 
 var MENU_MAIN =[
-    // TODO:二级路由没有起作用
-    {name:'教务统计',key:'/',role:0,list:[{name:'二级目录',key:'/tech',role:0,list:[]}]},
+    {name:'教务统计',key:'/',role:0,list:[
+        {name:'二级目录1',key:'/',role:0,list:[]},
+        {name:'二级目录2',key:'/tech',role:0,list:[]}
+    ]},
     {name:'帮助',key:'/help',role:0,list:[]}
 ]
 
